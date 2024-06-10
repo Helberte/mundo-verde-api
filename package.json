@@ -2,9 +2,10 @@
   "name": "mundo-verde-api",
   "version": "1.0.0",
   "description": "Api do sistema Mundo Verde",
-  "main": "./dist/controllers/index.js",
+  "main": "./dist/controllers/controller.js",
   "scripts": {
-    "dev": "rm -rf dist/ && npx tsc && node dist/controllers/index.js"
+    "dev": "rm -rf dist/ && npx tsc && node dist/controllers/controller.js",
+    "build": "rm -rf dist/ && npx tsc"
   },
   "repository": {
     "type": "git",
