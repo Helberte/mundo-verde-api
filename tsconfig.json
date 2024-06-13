@@ -14,7 +14,8 @@
     "emitDecoratorMetadata": true,            /* Emita metadados de tipo de design para declarações decoradas em arquivos de origem.*/
     "paths": {
       "@core/*": ["src/core/*"],
-      "@helpers/*": ["src/helpers/*"]
+      "@helpers/*": ["src/helpers/*"],
+      "@controle_acesso/*": ["src/controllers/controle_acesso/*"]
     }
   },
   "include": [

@@ -48,6 +48,7 @@
   },
   "_moduleAliases": {
     "@core": "dist/src/core",
-    "@helpers": "dist/src/helpers"
+    "@helpers": "dist/src/helpers",
+    "@controle_acesso": "dist/src/controllers/controle_acesso"
   }
 }

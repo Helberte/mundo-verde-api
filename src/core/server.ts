@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import http from "http";
 import helmet from "helmet";
 import morgan from "morgan";
+import router from "@core/routers";
 
 export class Server{
   private httpServer: http.Server;
@@ -34,6 +35,7 @@ export class Server{
     dotenv.config();
 
     this.middlewares();
+    this.express.use("/", router);
 
     this.httpServer = this.express.listen(process.env.APP_PORT, () => {
       console.log(`O servidor está executando na porta ${process.env.APP_PORT}!`);
