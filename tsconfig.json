@@ -15,7 +15,8 @@
     "paths": {
       "@core/*": ["src/core/*"],
       "@helpers/*": ["src/helpers/*"],
-      "@controle_acesso/*": ["src/controllers/controle_acesso/*"]
+      "@controle_acesso/*": ["src/controllers/controle_acesso/*"],
+      "@controllers/*": ["src/controllers/*"]
     }
   },
   "include": [

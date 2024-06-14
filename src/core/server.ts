@@ -6,14 +6,17 @@ import http from "http";
 import helmet from "helmet";
 import morgan from "morgan";
 import router from "@core/routers";
+import Database from "@core/database";
 
 export class Server{
   private httpServer: http.Server;
 
   readonly express: express.Express;
+  readonly database: Database
 
   constructor() {
-    this.express = express();
+    this.express  = express();
+    this.database = new Database();
   }
 
   private middlewares() {

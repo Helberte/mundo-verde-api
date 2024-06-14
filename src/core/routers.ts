@@ -1,5 +1,5 @@
 import { Router } from "express";
-import autenticacao from "@controle_acesso/autenticacao";
+import autenticacao from "@controle_acesso/routers";
 
 const router = Router();
 
