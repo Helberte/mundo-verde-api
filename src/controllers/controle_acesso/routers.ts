@@ -7,8 +7,8 @@ const router: Router = Router();
 /*
 
 */
-router.get("/", async (req: Request, res: Response) => {
-  await autenticacao.obterUsuarios(req, res);
+router.get("/", (req: Request, res: Response) => {
+  autenticacao.obterUsuarios(req, res);
 })
 
 router.put("/", (_req: Request, res: Response) => {

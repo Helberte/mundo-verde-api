@@ -1,6 +1,6 @@
 import "module-alias/register";
 
-import server from "@core/server";
+import server from "@config/server";
 
 server.start();
 

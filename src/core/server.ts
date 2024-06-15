@@ -15,8 +15,10 @@ export class Server{
   readonly database: Database
 
   constructor() {
+    console.log("teste");
     this.express  = express();
     this.database = new Database();
+
   }
 
   private middlewares() {
@@ -38,6 +40,8 @@ export class Server{
     dotenv.config();
 
     this.middlewares();
+
+    await this.database.config();
     this.express.use("/", router);
 
     this.httpServer = this.express.listen(process.env.APP_PORT, () => {

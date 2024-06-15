@@ -1,11 +1,10 @@
-import server from "@core/server";
+import server from "@config/server";
 import { Sequelize } from "sequelize";
-
 
 export abstract class Controller {
 
-  protected async db (): Promise<Sequelize> {
-    return await server.database.connection();
+  protected db (): Sequelize {
+    return server.database.connection();
   }
 }
 

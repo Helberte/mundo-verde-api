@@ -1,15 +1,13 @@
-import { Sequelize } from 'sequelize';
-
-
+import { Dialect, Sequelize } from 'sequelize';
 
 class Database {
 
   private conexao: Sequelize;
 
-  public async connection() : Promise<Sequelize> {
-    this.conexao = new Sequelize('hbyte', 'admin', '672h6r4rncs', {
-      host: "hbyte.c786u6qwmgrw.us-east-2.rds.amazonaws.com",
-      dialect: "mysql"
+  async config() {
+    this.conexao = new Sequelize(process.env.DB_MYSQL_DATABASE, process.env.DB_MYSQL_USERNAME, process.env.DB_MYSQL_PASSWORD, {
+      host: process.env.DB_MYSQL_HOST,
+      dialect: process.env.DB_MYSQL_DIALECT as Dialect
     })
 
     try {
@@ -17,7 +15,9 @@ class Database {
     } catch (error) {
       throw new Error("Conexão com banco falhou: " + error);
     }
+  }
 
+  public connection(): Sequelize{
     return this.conexao;
   }
 }

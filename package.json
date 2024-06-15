@@ -32,6 +32,7 @@
     "mysql2": "^3.10.0",
     "redis": "^4.6.13",
     "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
@@ -50,6 +51,8 @@
     "@core": "dist/src/core",
     "@helpers": "dist/src/helpers",
     "@controle_acesso": "dist/src/controllers/controle_acesso",
-    "@controllers": "dist/src/controllers"
+    "@controllers": "dist/src/controllers",
+    "@models": "dist/src/models/mundo_verde",
+    "@config": "dist/src/config"
   }
 }

@@ -16,7 +16,9 @@
       "@core/*": ["src/core/*"],
       "@helpers/*": ["src/helpers/*"],
       "@controle_acesso/*": ["src/controllers/controle_acesso/*"],
-      "@controllers/*": ["src/controllers/*"]
+      "@controllers/*": ["src/controllers/*"],
+      "@models/*": ["src/models/mundo_verde/*"],
+      "@config/*": ["src/config/*"]
     }
   },
   "include": [
@@ -26,5 +28,5 @@
   "exclude": [
     "dist",
     "node_modules"
-  ]  
+  ]
 }
