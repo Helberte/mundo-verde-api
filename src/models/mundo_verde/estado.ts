@@ -1,35 +1,42 @@
-import { DataTypes, Model } from "sequelize";
+import { Moment } from "moment";
+import { Table, Column, Model, AutoIncrement, PrimaryKey, AllowNull } from "sequelize-typescript";
 
-class Estado extends Model {
+@Table({ tableName: "estado" })
+export default class Estado extends Model {
 
-};
+  @AutoIncrement
+  @PrimaryKey
+  @Column
+  id: number;
 
-Estado.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    uf: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    ibge_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    }
-  },
-  {
-    sequelize,
-    modelName: "Estado",
-    tableName: "estado"
-  }
-);
+  @AllowNull(false)
+  @Column
+  nome: string
 
-export default Estado;
+  @AllowNull(false)
+  @Column
+  uf: string
+
+  @AllowNull(false)
+  @Column
+  ibge_id: number
+
+  @AllowNull(false)
+  @Column("created_at")
+  createdAt: Moment;
+
+  @Column("updated_at")
+  updatedAt: Moment;
+
+  @Column("deleted_at")
+  deletedAt: Moment;
+
+  @Column("created_by")
+  createdBy: Moment;
+
+  @Column("updated_by")
+  updatedBy: Moment;
+
+  @Column("deleted_by")
+  deletedBy: Moment;
+}

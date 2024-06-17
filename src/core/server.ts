@@ -15,7 +15,6 @@ export class Server{
   readonly database: Database
 
   constructor() {
-    console.log("teste");
     this.express  = express();
     this.database = new Database();
 

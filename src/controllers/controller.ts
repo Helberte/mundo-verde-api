@@ -1,5 +1,5 @@
 import server from "@config/server";
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 
 export abstract class Controller {
 

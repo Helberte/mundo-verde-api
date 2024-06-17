@@ -1,4 +1,5 @@
-import { Dialect, Sequelize } from 'sequelize';
+import { Dialect } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 
 class Database {
 
@@ -7,8 +8,9 @@ class Database {
   async config() {
     this.conexao = new Sequelize(process.env.DB_MYSQL_DATABASE, process.env.DB_MYSQL_USERNAME, process.env.DB_MYSQL_PASSWORD, {
       host: process.env.DB_MYSQL_HOST,
-      dialect: process.env.DB_MYSQL_DIALECT as Dialect
-    })
+      dialect: process.env.DB_MYSQL_DIALECT as Dialect,
+      models: [__dirname.substring(0, __dirname.indexOf("dist")) + "dist\\src\\models\\mundo_verde"]
+    });
 
     try {
       await this.conexao.authenticate();
