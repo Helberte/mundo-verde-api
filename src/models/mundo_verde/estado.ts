@@ -1,44 +1,22 @@
-import { Moment } from "moment";
-import { Table, Column, Model, AutoIncrement, PrimaryKey, AllowNull, DataType, CreatedAt, UpdatedAt, DeletedAt } from "sequelize-typescript";
+import SequelizeModel from "@core/database/sequelize_model";
+import { Table, Column, AllowNull, HasMany, DataType } from "sequelize-typescript";
+import Cidade from "./cidade";
 
-@Table({ tableName: "estado" })
-export default class Estado extends Model<Estado> {
-
-  @AutoIncrement
-  @PrimaryKey
-  @Column
-  id: number;
+@Table( { tableName: "estado" } )
+export default class Estado extends SequelizeModel<Estado> {
 
   @AllowNull(false)
   @Column
-  nome: string
+  nome: string;
 
   @AllowNull(false)
   @Column
-  uf: string
+  uf: string;
 
   @AllowNull(false)
-  @Column
-  ibge_id: number
+  @Column({ field: "ibge_id", type: DataType.NUMBER })
+  ibgeId: number;
 
-  @CreatedAt
-  @Column({ field: "created_at", type: DataType.DATE})
-  createdAt: Moment;
-
-  @UpdatedAt
-  @Column({ field: "updated_at", type: DataType.DATE})
-  updatedAt: Moment;
-
-  @DeletedAt
-  @Column({ field: "deleted_at", type: DataType.DATE})
-  deletedAt: Moment;
-
-  @Column({ field: "created_by", type: DataType.STRING})
-  createdBy: Moment;
-
-  @Column({ field: "updated_by", type: DataType.STRING})
-  updatedBy: Moment;
-
-  @Column({ field: "deleted_by", type: DataType.STRING})
-  deletedBy: Moment;
+  @HasMany(() => Cidade)
+  cidades: Cidade[];
 }
