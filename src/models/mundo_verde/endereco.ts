@@ -1,6 +1,7 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasOne } from "sequelize-typescript";
 import Opcoes from "./opcao";
+import Empresa from "./empresa";
 
 export default class Endereco extends SequelizeModel<Endereco> {
 
@@ -27,6 +28,6 @@ export default class Endereco extends SequelizeModel<Endereco> {
   @BelongsTo(() => Opcoes)
   opcoesTipo: Opcoes;
 
-  // um endereço só possui uma empresa, falta este relacionamento de endereço para empresa
-  // aqui!!!
+  @HasOne(() => Empresa)
+  empresa: Empresa;
 }
