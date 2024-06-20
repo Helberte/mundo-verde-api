@@ -1,5 +1,6 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, Column } from "sequelize-typescript";
+import { AllowNull, Column, HasMany } from "sequelize-typescript";
+import Empresa from "./empresa";
 
 export default class GrupoEmpresa extends SequelizeModel<GrupoEmpresa> {
 
@@ -10,4 +11,7 @@ export default class GrupoEmpresa extends SequelizeModel<GrupoEmpresa> {
   @AllowNull(false)
   @Column
   codigo: string;
+
+  @HasMany(() => Empresa)
+  empresas: Empresa[];
 }
