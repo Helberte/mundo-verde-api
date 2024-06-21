@@ -1,10 +1,13 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany } from "sequelize-typescript";
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
 import GrupoEmpresa from "./grupo_empresa";
 import GrupoOpcoes from "./grupo_opcoes";
 import Opcoes from "./opcao";
 import Endereco from "./endereco";
+import Pessoa from "./pessoa";
+import EmpresaPessoa from "./empresa_pessoa";
 
+@Table({ tableName: "empresa" })
 export default class Empresa extends SequelizeModel<Empresa> {
 
   @AllowNull(false)
@@ -42,4 +45,7 @@ export default class Empresa extends SequelizeModel<Empresa> {
 
   @HasMany(() => Opcoes)
   opcoes: Opcoes[];
+
+  @BelongsToMany(() => Pessoa, () => EmpresaPessoa)
+  pessoas: Pessoa[];
 }

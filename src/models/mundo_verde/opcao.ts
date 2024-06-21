@@ -1,9 +1,10 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
 import GrupoOpcoes from "./grupo_opcoes";
 import Empresa from "./empresa";
 import Endereco from "./endereco";
 
+@Table({ tableName: "opcoes" })
 export default class Opcoes extends SequelizeModel<Opcoes> {
   @AllowNull(false)
   @Column

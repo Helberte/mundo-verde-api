@@ -1,8 +1,10 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasOne } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasOne, Table } from "sequelize-typescript";
 import Opcoes from "./opcao";
 import Empresa from "./empresa";
+import Pessoa from "./pessoa";
 
+@Table({ tableName: "endereco" })
 export default class Endereco extends SequelizeModel<Endereco> {
 
   @AllowNull(false)
@@ -30,4 +32,7 @@ export default class Endereco extends SequelizeModel<Endereco> {
 
   @HasOne(() => Empresa)
   empresa: Empresa;
+
+  @HasOne(() => Pessoa)
+  pessoa: Pessoa;
 }
