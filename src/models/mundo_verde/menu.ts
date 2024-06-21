@@ -1,5 +1,9 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, Column } from "sequelize-typescript";
+import { AllowNull, BelongsToMany, Column } from "sequelize-typescript";
+import Usuario from "./usuario";
+import MenuUsuarioEspecifico from "./menu_usuario_especifico";
+import Perfil from "./perfil";
+import PerfilMenu from "./perfil_menu";
 
 export default class Menu extends SequelizeModel<Menu> {
 
@@ -18,4 +22,10 @@ export default class Menu extends SequelizeModel<Menu> {
   @AllowNull(false)
   @Column
   ordem: number
+
+  @BelongsToMany(() => Usuario, () => MenuUsuarioEspecifico)
+  usuariosEspecificos: Usuario[];
+
+  @BelongsToMany(() => Perfil, () => PerfilMenu)
+  perfis: Perfil[];
 }

@@ -1,6 +1,8 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey } from "sequelize-typescript";
 import Empresa from "./empresa";
+import Menu from "./menu";
+import PerfilMenu from "./perfil_menu";
 
 export default class Perfil extends SequelizeModel<Perfil> {
   
@@ -14,4 +16,7 @@ export default class Perfil extends SequelizeModel<Perfil> {
 
   @BelongsTo(() => Empresa)
   empresa: Empresa;
+
+  @BelongsToMany(() => Menu, () => PerfilMenu)
+  menus: Menu[];
 }

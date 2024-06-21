@@ -1,6 +1,10 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey } from "sequelize-typescript";
 import Pessoa from "./pessoa";
+import Funcao from "./funcao";
+import FuncaoUsuario from "./funcao_usuario";
+import Menu from "./menu";
+import MenuUsuarioEspecifico from "./menu_usuario_especifico";
 
 export default class Usuario extends SequelizeModel<Usuario> {
   @AllowNull(false)
@@ -21,4 +25,10 @@ export default class Usuario extends SequelizeModel<Usuario> {
 
   @BelongsTo(() => Pessoa)
   pessoa: Pessoa;
+
+  @BelongsToMany(() => Funcao, () => FuncaoUsuario)
+  funcoes: Funcao[];
+
+  @BelongsToMany(() => Menu, () => MenuUsuarioEspecifico)
+  menusEspecificos: Menu[];
 }
