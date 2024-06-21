@@ -1,18 +1,18 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import Menu from "./menu";
 import Usuario from "./usuario";
+import Perfil from "./perfil";
 
-@Table({ tableName: "menu_usuario_especifico" })
-export default class MenuUsuarioEspecifico extends SequelizeModel<MenuUsuarioEspecifico> {
-
-  @ForeignKey(() => Menu)
-  @Column({ field: "fk_menu_id", type: DataType.NUMBER })
-  menuId: number;
-
+@Table({ tableName: "perfil_usuario" })
+export default class PerfilUsuario extends SequelizeModel<PerfilUsuario> {
+  
   @ForeignKey(() => Usuario)
   @Column({ field: "fk_usuario_id", type: DataType.NUMBER })
   usuarioId: number;
+
+  @ForeignKey(() => Perfil)
+  @Column({ field: "fk_perfil_id", type: DataType.NUMBER })
+  perfilId: number;
 
   @AllowNull(false)
   @Column({ field: "fk_empresa_id", type: DataType.NUMBER })

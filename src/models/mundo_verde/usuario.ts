@@ -1,22 +1,31 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import Pessoa from "./pessoa";
 import Funcao from "./funcao";
 import FuncaoUsuario from "./funcao_usuario";
 import Menu from "./menu";
 import MenuUsuarioEspecifico from "./menu_usuario_especifico";
+import Perfil from "./perfil";
+import PerfilUsuario from "./perfil_usuario";
+import Empresa from "./empresa";
+import EmpresaUsuario from "./empresa_usuario";
 
+@Table({ tableName: "usuario" })
 export default class Usuario extends SequelizeModel<Usuario> {
   @AllowNull(false)
+  @Column
   login: string;
 
   @AllowNull(false)
+  @Column
   senha: string;
 
   @AllowNull(false)
+  @Column
   nome: string;
 
   @AllowNull(false)
+  @Column
   ativo: string;
 
   @ForeignKey(() => Pessoa)
@@ -31,4 +40,10 @@ export default class Usuario extends SequelizeModel<Usuario> {
 
   @BelongsToMany(() => Menu, () => MenuUsuarioEspecifico)
   menusEspecificos: Menu[];
+
+  @BelongsToMany(() => Perfil, () => PerfilUsuario)
+  perfis: Perfil[];
+
+  @BelongsToMany(() => Empresa, () => EmpresaUsuario)
+  empresas: Empresa[];
 }

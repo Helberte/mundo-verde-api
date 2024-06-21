@@ -1,8 +1,9 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import Usuario from "./usuario";
 import Funcao from "./funcao";
 
+@Table({tableName: "funcao_usuario"})
 export default class FuncaoUsuario extends SequelizeModel<FuncaoUsuario> {
 
   @ForeignKey(() => Usuario)

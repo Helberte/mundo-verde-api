@@ -1,8 +1,9 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsToMany, Column, DataType } from "sequelize-typescript";
+import { AllowNull, BelongsToMany, Column, DataType, Table } from "sequelize-typescript";
 import Usuario from "./usuario";
 import FuncaoUsuario from "./funcao_usuario";
 
+@Table({ tableName: "funcao" })
 export default class Funcao extends SequelizeModel<Funcao> {
   @AllowNull(false)
   @Column

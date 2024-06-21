@@ -1,8 +1,9 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import Menu from "./menu";
 import Perfil from "./perfil";
 
+@Table({ tableName: "perfil_menu" })
 export default class PerfilMenu extends SequelizeModel<PerfilMenu> {
 
   @ForeignKey(() => Menu)

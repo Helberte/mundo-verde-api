@@ -7,6 +7,8 @@ import Endereco from "./endereco";
 import Pessoa from "./pessoa";
 import EmpresaPessoa from "./empresa_pessoa";
 import Perfil from "./perfil";
+import Usuario from "./usuario";
+import EmpresaUsuario from "./empresa_usuario";
 
 @Table({ tableName: "empresa" })
 export default class Empresa extends SequelizeModel<Empresa> {
@@ -52,4 +54,7 @@ export default class Empresa extends SequelizeModel<Empresa> {
 
   @HasMany(() => Perfil)
   perfis: Perfil[];
+
+  @BelongsToMany(() => Usuario, () => EmpresaUsuario)
+  usuarios: Usuario[];
 }

@@ -1,10 +1,11 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsToMany, Column } from "sequelize-typescript";
+import { AllowNull, BelongsToMany, Column, Table } from "sequelize-typescript";
 import Usuario from "./usuario";
 import MenuUsuarioEspecifico from "./menu_usuario_especifico";
 import Perfil from "./perfil";
 import PerfilMenu from "./perfil_menu";
 
+@Table({ tableName: "menu" })
 export default class Menu extends SequelizeModel<Menu> {
 
   @AllowNull(false)
