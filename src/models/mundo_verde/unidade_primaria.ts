@@ -1,5 +1,6 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, Column, DataType, Table } from "sequelize-typescript";
+import { AllowNull, Column, DataType, HasMany, Table } from "sequelize-typescript";
+import Produto from "./produto";
 
 @Table({ tableName: "unidade_primaria" })
 export default class UnidadePrimaria extends SequelizeModel<UnidadePrimaria> {
@@ -19,4 +20,7 @@ export default class UnidadePrimaria extends SequelizeModel<UnidadePrimaria> {
   @AllowNull(false)
   @Column({ field: "fk_empresa_id", type: DataType.NUMBER })
   empresaId: number;
+
+  @HasMany(() => Produto)
+  produtos: Produto[];
 }
