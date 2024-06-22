@@ -5,6 +5,7 @@ import Endereco from "./endereco";
 import Empresa from "./empresa";
 import EmpresaPessoa from "./empresa_pessoa";
 import Usuario from "./usuario";
+import Representante from "./representante";
 
 @Table({ tableName: "pessoa" })
 export default class Pessoa extends SequelizeModel<Pessoa> {
@@ -57,4 +58,7 @@ export default class Pessoa extends SequelizeModel<Pessoa> {
 
   @HasOne(() => Usuario)
   usuario: Usuario;
+
+  @HasOne(() => Representante)
+  representante: Representante;
 }

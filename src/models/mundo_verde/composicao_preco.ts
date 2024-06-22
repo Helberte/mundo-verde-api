@@ -1,6 +1,7 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
 import Produto from "./produto";
+import TipoRepresentante from "./tipo_representante";
 
 @Table({ tableName: "composicao_preco" })
 export default class ComposicaoPreco extends SequelizeModel<ComposicaoPreco> {
@@ -51,4 +52,7 @@ export default class ComposicaoPreco extends SequelizeModel<ComposicaoPreco> {
   @AllowNull(false)
   @Column({ field: "fk_empresa_id", type: DataType.NUMBER })
   empresaId: number;
+
+  @HasMany(() => TipoRepresentante)
+  tipoRepresentante: TipoRepresentante[];
 }
