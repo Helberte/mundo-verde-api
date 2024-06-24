@@ -5,6 +5,7 @@ import TipoRepresentante from "./tipo_representante";
 import PrePedido from "./pre_pedido";
 import PedidoCompra from "./pedido_compra";
 import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
+import PedidoVenda from "./pedido_venda";
 
 @Table({ tableName: "representante" })
 export default class Representante extends SequelizeModel<Representante> {
@@ -34,4 +35,7 @@ export default class Representante extends SequelizeModel<Representante> {
 
   @HasOne(() => RelRepresentantePedidoCompra)
   relRepresentantePedidoCompra: RelRepresentantePedidoCompra;
+
+  @HasMany(() => PedidoVenda)
+  pedidosVenda: PedidoVenda[];
 }

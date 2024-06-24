@@ -9,7 +9,7 @@ import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
 
 @Table({ tableName: "pedido_compra" })
 export default class PedidoCompra extends SequelizeModel<PedidoCompra> {
-  @AllowNull(false)
+  @AllowNull(true)
   @Column
   observacao: string;
 
