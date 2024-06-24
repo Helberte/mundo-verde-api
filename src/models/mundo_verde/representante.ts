@@ -1,7 +1,8 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany } from "sequelize-typescript";
 import Pessoa from "./pessoa";
 import TipoRepresentante from "./tipo_representante";
+import PrePedido from "./pre_pedido";
 
 export default class Representante extends SequelizeModel<Representante> {
   @AllowNull(false)
@@ -21,4 +22,7 @@ export default class Representante extends SequelizeModel<Representante> {
 
   @BelongsTo(() => TipoRepresentante)
   tipoRepresentante: TipoRepresentante;
+
+  @HasMany(() => PrePedido)
+  prePedidos: PrePedido[];
 }

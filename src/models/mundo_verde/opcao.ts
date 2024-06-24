@@ -3,6 +3,7 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } fr
 import GrupoOpcoes from "./grupo_opcoes";
 import Empresa from "./empresa";
 import Endereco from "./endereco";
+import PrePedido from "./pre_pedido";
 
 @Table({ tableName: "opcoes" })
 export default class Opcoes extends SequelizeModel<Opcoes> {
@@ -26,4 +27,7 @@ export default class Opcoes extends SequelizeModel<Opcoes> {
 
   @HasMany(() => Endereco)
   enderecos: Endereco[];
+
+  @HasMany(() => PrePedido)
+  prePedidos: PrePedido[];
 }
