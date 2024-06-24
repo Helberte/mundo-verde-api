@@ -2,6 +2,8 @@ import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
 import UnidadePrimaria from "./unidade_primaria";
 import ComposicaoPreco from "./composicao_preco";
+import PrePedidoItens from "./pre_pedido_itens";
+import PedidoCompraItens from "./pedido_compra_itens";
 
 @Table({ tableName: "produto" })
 export default class Produto extends SequelizeModel<Produto> {
@@ -50,4 +52,10 @@ export default class Produto extends SequelizeModel<Produto> {
 
   @HasMany(() => ComposicaoPreco)
   composicoesPreco: ComposicaoPreco[];
+
+  @HasMany(() => PrePedidoItens)
+  prePedidoItens: PrePedidoItens[];
+
+  @HasMany(() => PedidoCompraItens)
+  pedidoCompraItens: PedidoCompraItens[];
 }

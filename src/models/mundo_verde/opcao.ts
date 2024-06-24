@@ -4,6 +4,7 @@ import GrupoOpcoes from "./grupo_opcoes";
 import Empresa from "./empresa";
 import Endereco from "./endereco";
 import PrePedido from "./pre_pedido";
+import PedidoCompra from "./pedido_compra";
 
 @Table({ tableName: "opcoes" })
 export default class Opcoes extends SequelizeModel<Opcoes> {
@@ -30,4 +31,7 @@ export default class Opcoes extends SequelizeModel<Opcoes> {
 
   @HasMany(() => PrePedido)
   prePedidos: PrePedido[];
+
+  @HasMany(() => PedidoCompra)
+  pedidosCompra: PedidoCompra[];
 }

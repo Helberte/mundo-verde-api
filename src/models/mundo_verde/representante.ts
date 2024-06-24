@@ -1,9 +1,12 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Table } from "sequelize-typescript";
 import Pessoa from "./pessoa";
 import TipoRepresentante from "./tipo_representante";
 import PrePedido from "./pre_pedido";
+import PedidoCompra from "./pedido_compra";
+import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
 
+@Table({ tableName: "representante" })
 export default class Representante extends SequelizeModel<Representante> {
   @AllowNull(false)
   @Column({ type: DataType.CHAR })
@@ -25,4 +28,10 @@ export default class Representante extends SequelizeModel<Representante> {
 
   @HasMany(() => PrePedido)
   prePedidos: PrePedido[];
+
+  @HasMany(() => PedidoCompra)
+  pedidosCompra: PedidoCompra[];
+
+  @HasOne(() => RelRepresentantePedidoCompra)
+  relRepresentantePedidoCompra: RelRepresentantePedidoCompra;
 }

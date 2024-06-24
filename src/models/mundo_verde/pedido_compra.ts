@@ -1,20 +1,28 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { Moment } from "moment";
 import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Table } from "sequelize-typescript";
-import Representante from "./representante";
 import Opcoes from "./opcao";
-import PrePedidoItens from "./pre_pedido_itens";
+import Representante from "./representante";
+import PedidoCompraItens from "./pedido_compra_itens";
 import RelPrePedidoPedidoCompra from "./rel_pre_pedido_pedido_compra";
+import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
 
-@Table({tableName: "pre_pedido"})
-export default class PrePedido extends SequelizeModel<PrePedido> {
-  @AllowNull(true)
+@Table({ tableName: "pedido_compra" })
+export default class PedidoCompra extends SequelizeModel<PedidoCompra> {
+  @AllowNull(false)
   @Column
   observacao: string;
 
   @AllowNull(true)
   @Column({ field: "data_envio", type: DataType.DATE })
   dataEnvio: Moment;
+
+  @ForeignKey(() => Opcoes)
+  @Column({ field: "opcoes_status_id", type: DataType.NUMBER })
+  opcoesStatusId: number;
+
+  @BelongsTo(() => Opcoes)
+  status: Opcoes;
 
   @AllowNull(true)
   @Column({ field: "valor_total", type: DataType.NUMBER })
@@ -35,16 +43,12 @@ export default class PrePedido extends SequelizeModel<PrePedido> {
   @BelongsTo(() => Representante)
   representante: Representante;
 
-  @ForeignKey(() => Opcoes)
-  @Column({ field: "fk_opcoes_status_id", type: DataType.NUMBER })
-  opcoesStatusId: number;
-
-  @BelongsTo(() => Opcoes)
-  status: Opcoes;
-
-  @HasMany(() => PrePedidoItens)
-  prePedidoItens: PrePedidoItens[];
+  @HasMany(() => PedidoCompraItens)
+  pedidoCompraItens: PedidoCompraItens[];
 
   @HasOne(() => RelPrePedidoPedidoCompra)
   relPrePedidoPedidoCompra: RelPrePedidoPedidoCompra;
+
+  @HasOne(() => RelRepresentantePedidoCompra)
+  relRepresentantePedidoCompra: RelRepresentantePedidoCompra;
 }
