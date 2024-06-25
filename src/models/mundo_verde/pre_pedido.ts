@@ -5,6 +5,7 @@ import Representante from "./representante";
 import Opcoes from "./opcao";
 import PrePedidoItens from "./pre_pedido_itens";
 import RelPrePedidoPedidoCompra from "./rel_pre_pedido_pedido_compra";
+import RelPrePedidoPedidoVenda from "./rel_pre_pedido_pedido_venda";
 
 @Table({tableName: "pre_pedido"})
 export default class PrePedido extends SequelizeModel<PrePedido> {
@@ -47,4 +48,7 @@ export default class PrePedido extends SequelizeModel<PrePedido> {
 
   @HasOne(() => RelPrePedidoPedidoCompra)
   relPrePedidoPedidoCompra: RelPrePedidoPedidoCompra;
+
+  @HasOne(() => RelPrePedidoPedidoVenda)
+  relPrePedidoPedidoVenda: RelPrePedidoPedidoVenda;
 }

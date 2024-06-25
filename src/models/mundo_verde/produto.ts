@@ -4,6 +4,7 @@ import UnidadePrimaria from "./unidade_primaria";
 import ComposicaoPreco from "./composicao_preco";
 import PrePedidoItens from "./pre_pedido_itens";
 import PedidoCompraItens from "./pedido_compra_itens";
+import PedidoVendaItens from "./pedido_venda_itens";
 
 @Table({ tableName: "produto" })
 export default class Produto extends SequelizeModel<Produto> {
@@ -58,4 +59,7 @@ export default class Produto extends SequelizeModel<Produto> {
 
   @HasMany(() => PedidoCompraItens)
   pedidoCompraItens: PedidoCompraItens[];
+
+  @HasMany(() => PedidoVendaItens)
+  pedidoVendaItens: PedidoVendaItens[];
 }

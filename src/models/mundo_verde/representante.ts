@@ -6,6 +6,8 @@ import PrePedido from "./pre_pedido";
 import PedidoCompra from "./pedido_compra";
 import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
 import PedidoVenda from "./pedido_venda";
+import RelVendedorGestorPedidoVenda from "./rel_vendedor_gestor_pedido_venda";
+import RelVendedorPedidoVenda from "./rel_vendedor_pedido_venda";
 
 @Table({ tableName: "representante" })
 export default class Representante extends SequelizeModel<Representante> {
@@ -38,4 +40,13 @@ export default class Representante extends SequelizeModel<Representante> {
 
   @HasMany(() => PedidoVenda)
   pedidosVenda: PedidoVenda[];
+
+  @HasMany(() => RelVendedorGestorPedidoVenda)
+  relVendedorGestorPedidoVendas: RelVendedorGestorPedidoVenda[];
+
+  @HasMany(() => RelVendedorGestorPedidoVenda)
+  relVendedorGestorPedidoVendaVendedor: RelVendedorGestorPedidoVenda[];
+
+  @HasMany(() => RelVendedorPedidoVenda)
+  relVendedorPedidoVendas: RelVendedorPedidoVenda[];
 }

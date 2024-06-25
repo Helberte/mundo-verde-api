@@ -1,8 +1,13 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { Moment } from "moment";
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Table } from "sequelize-typescript";
 import Opcoes from "./opcao";
 import Representante from "./representante";
+import PedidoVendaItens from "./pedido_venda_itens";
+import RelPedidoCompraPedidoVenda from "./rel_pedido_compra_pedido_venda";
+import RelVendedorGestorPedidoVenda from "./rel_vendedor_gestor_pedido_venda";
+import RelVendedorPedidoVenda from "./rel_vendedor_pedido_venda";
+import RelPrePedidoPedidoVenda from "./rel_pre_pedido_pedido_venda";
 
 @Table({ tableName: "pedido_venda" })
 export default class PedidoVenda extends SequelizeModel<PedidoVenda> {
@@ -43,4 +48,19 @@ export default class PedidoVenda extends SequelizeModel<PedidoVenda> {
 
   @BelongsTo(() => Representante)
   representante: Representante;
+
+  @HasMany(() => PedidoVendaItens)
+  pedidoVendaItens: PedidoVendaItens[];
+
+  @HasOne(() => RelPedidoCompraPedidoVenda)
+  relPedidoCompraPedidoVenda: RelPedidoCompraPedidoVenda;
+
+  @HasOne(() => RelVendedorGestorPedidoVenda)
+  relVendedorGestorPedidoVenda: RelVendedorGestorPedidoVenda;
+
+  @HasOne(() => RelVendedorPedidoVenda)
+  relVendedorPedidoVenda: RelVendedorPedidoVenda;
+
+  @HasOne(() => RelPrePedidoPedidoVenda)
+  relPrePedidoPedidoVenda: RelPrePedidoPedidoVenda;
 }

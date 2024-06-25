@@ -6,6 +6,7 @@ import Representante from "./representante";
 import PedidoCompraItens from "./pedido_compra_itens";
 import RelPrePedidoPedidoCompra from "./rel_pre_pedido_pedido_compra";
 import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
+import RelPedidoCompraPedidoVenda from "./rel_pedido_compra_pedido_venda";
 
 @Table({ tableName: "pedido_compra" })
 export default class PedidoCompra extends SequelizeModel<PedidoCompra> {
@@ -51,4 +52,7 @@ export default class PedidoCompra extends SequelizeModel<PedidoCompra> {
 
   @HasOne(() => RelRepresentantePedidoCompra)
   relRepresentantePedidoCompra: RelRepresentantePedidoCompra;
+
+  @HasOne(() => RelPedidoCompraPedidoVenda)
+  relPedidoCompraPedidoVenda: RelPedidoCompraPedidoVenda;
 }
