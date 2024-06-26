@@ -1,4 +1,3 @@
-
 import server  from "@core/server";
 
 // algumas configurações gerais sobre o servidor
