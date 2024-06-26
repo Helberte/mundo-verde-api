@@ -7,17 +7,24 @@ import helmet from "helmet";
 import morgan from "morgan";
 import router from "@core/routers";
 import Database from "@core/database";
+import { join } from "path";
+// import { ClassValidatorTranslatorMiddleware } from "class-validator-translator-middleware";
 
 export class Server{
   private httpServer: http.Server;
 
   readonly express: express.Express;
   readonly database: Database
+  private caminhoMensagensErro: string;
+
 
   constructor() {
     this.express  = express();
     this.database = new Database();
 
+    this.caminhoMensagensErro = join(__dirname, "error_codes");
+
+    console.log(this.caminhoMensagensErro);
   }
 
   private middlewares() {

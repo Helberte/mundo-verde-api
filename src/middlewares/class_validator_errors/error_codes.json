@@ -1,0 +1,7 @@
+{
+  "isDefined": "O campo deve ser definido",
+  "matches": "O valor fornecido não corresponde ao padrão esperado",
+  "email": "O valor fornecido não é um email válido",
+  "password": "A senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas e números",
+  "length": "Tamanho do campo é inválido"
+}
