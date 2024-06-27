@@ -4,9 +4,8 @@
   "description": "Api do sistema Mundo Verde",
   "main": "./dist/app.js",
   "scripts": {
-    "dev": "rm -rf dist/ && npx tsc && node dist/app.js",
-    "build": "rm -rf dist/ && npx tsc",
-    "teste": "mkdir -p dist/src/middlewares/class_validator_errors && cp src/middlewares/class_validator_errors/error_codes.json dist/src/middlewares/class_validator_errors"
+    "dev": "yarn && npx tsc && node dist/app.js",
+    "build": "yarn && rm -rf dist/ && npx tsc"
   },
   "repository": {
     "type": "git",
@@ -22,7 +21,6 @@
     "body-parser": "^1.20.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "class-validator-translator-middleware": "^1.0.5",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
