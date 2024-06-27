@@ -2,6 +2,7 @@ import Controller from "@controllers/controller";
 import { validaParametros } from "@helpers/utils";
 import { IsNotEmpty, IsNumber, IsString, Length } from "class-validator";
 import { Request, Response } from "express";
+import sanitizeHtml from "sanitize-html";
 
 class EstadoValidator {
   @Length(5, 70, { message: "O tamanho do nome é inválido" })

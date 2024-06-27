@@ -34,6 +34,7 @@
     "mysql2": "^3.10.0",
     "redis": "^4.6.13",
     "reflect-metadata": "^0.2.2",
+    "sanitize-html": "^2.13.0",
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6",
     "validate.js": "^0.13.1"
@@ -47,6 +48,7 @@
     "@types/module-alias": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.12",
+    "@types/sanitize-html": "^2.11.0",
     "@types/validator": "^13.12.0",
     "nodemon": "^3.1.0",
     "typescript": "^5.4.5"
