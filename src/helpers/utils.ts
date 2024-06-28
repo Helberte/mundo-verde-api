@@ -1,7 +1,7 @@
 import { plainToClass } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
 
-export async function validaParametros<T extends Object, O>(classe: new () => T, objeto: O): Promise<boolean> {  
+export async function validaParametros<T extends Object, O>(classe: new () => T, objeto: O): Promise<T> {  
   const objetoResultante: T = plainToClass<T, O>(classe, objeto)  
   const erros: ValidationError[] = await validate(objetoResultante);
   let retorno: string = "";
@@ -14,5 +14,5 @@ export async function validaParametros<T extends Object, O>(classe: new () => T,
     throw new Error(retorno);
   }
 
-  return true;
+  return objetoResultante;
 }

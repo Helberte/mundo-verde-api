@@ -1,35 +1,35 @@
 import Controller from "@controllers/controller";
 import { validaParametros } from "@helpers/utils";
-import { IsNotEmpty, IsNumber, IsString, Length } from "class-validator";
 import { Request, Response } from "express";
-import sanitizeHtml from "sanitize-html";
+import { EstadoValidator } from "./validacao_dados";
+import Estado from "@models/estado";
 
-class EstadoValidator {
-  @Length(5, 70, { message: "O tamanho do nome é inválido" })
-  @IsNotEmpty({ message: "O nome está vazio" })
-  @IsString({ message: "O nome precisa ser um texto" })
-  nome: string;
-
-  @Length(2, 2, { message: "O tamanho do UF deve ser de 2 caracteres." })
-  @IsNotEmpty({ message: "O UF está vazio" })
-  @IsString({ message: "O UF não é válido" })
-  uf: string;
-
-  @IsNumber({ maxDecimalPlaces: 0 }, { message: "ibgeId inválido" })
-  @IsNotEmpty({ message: "ibgeId é obrigatório" })
-  ibgeId: number;
-}
-
-export default class Estado extends Controller {
+export default class EstadoController extends Controller {
 
   public async criarEstado(req: Request, res: Response): Promise<Response> {
-    try {
-      
-      await validaParametros<EstadoValidator, any>(EstadoValidator, req.body);
+    try {      
+      const estado: EstadoValidator = await validaParametros<EstadoValidator, any>(EstadoValidator, req.body);
      
-      // proteget contra ataque de xss
+      const estadoExistente: Estado = await Estado.findOne(
+        {
+          where:
+          {
+            ibgeId: estado.ibgeId
+          }
+        });
+      
+      if (estadoExistente)
+        throw new Error(`O estado ${estado.nome} IBGEID: ${estado.ibgeId} Já existe cadastrado.`);
 
-      return res.status(200).json({ mensagem: "sucesso" });
+      if (estadoExistente.nome.toUpperCase().trim() === estado.nome.toUpperCase().trim())
+        throw new Error(`Já existe um registro com o mesmo nome cadastrado. Nome do estado: ${estado.nome}`);
+
+      // consultar o ibgeid na api do ibge para ver se de fato o estado existe
+      
+      return res.status(200).json({
+        mensagem: "sucesso",
+        estado
+       });
       
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
