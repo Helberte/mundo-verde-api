@@ -9,7 +9,7 @@ import PedidoVenda from "./pedido_venda";
 import RelVendedorGestorPedidoVenda from "./rel_vendedor_gestor_pedido_venda";
 import RelVendedorPedidoVenda from "./rel_vendedor_pedido_venda";
 
-@Table({ tableName: "representante" })
+@Table({ tableName: "representante", timestamps: false })
 export default class Representante extends SequelizeModel<Representante> {
   @AllowNull(false)
   @Column({ type: DataType.CHAR })

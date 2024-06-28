@@ -20,11 +20,11 @@ export default class SequelizeModel<T> extends Model<T> {
   deletedAt: Moment;
 
   @Column({ field: "created_by", type: DataType.STRING})
-  createdBy: Moment;
+  createdBy: string;
 
   @Column({ field: "updated_by", type: DataType.STRING})
-  updatedBy: Moment;
+  updatedBy: string;
 
   @Column({ field: "deleted_by", type: DataType.STRING})
-  deletedBy: Moment;
+  deletedBy: string;
 }

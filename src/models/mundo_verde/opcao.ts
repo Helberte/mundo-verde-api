@@ -6,7 +6,7 @@ import Endereco from "./endereco";
 import PrePedido from "./pre_pedido";
 import PedidoCompra from "./pedido_compra";
 
-@Table({ tableName: "opcoes" })
+@Table({ tableName: "opcoes", timestamps: false })
 export default class Opcoes extends SequelizeModel<Opcoes> {
   @AllowNull(false)
   @Column

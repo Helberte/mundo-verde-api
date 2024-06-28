@@ -4,7 +4,7 @@ import Opcoes from "./opcao";
 import Empresa from "./empresa";
 import Pessoa from "./pessoa";
 
-@Table({ tableName: "endereco" })
+@Table({ tableName: "endereco", timestamps: false })
 export default class Endereco extends SequelizeModel<Endereco> {
 
   @AllowNull(false)
@@ -22,7 +22,7 @@ export default class Endereco extends SequelizeModel<Endereco> {
   @AllowNull(true)
   @Column
   complemento: string;
-  
+
   @ForeignKey(() => Opcoes)
   @Column({ field: "opcoes_tipo_id", type: DataType.NUMBER })
   opcoesTipoId: number;

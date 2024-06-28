@@ -3,7 +3,7 @@ import { AllowNull, Column, DataType, ForeignKey, Table } from "sequelize-typesc
 import Menu from "./menu";
 import Perfil from "./perfil";
 
-@Table({ tableName: "perfil_menu" })
+@Table({ tableName: "perfil_menu", timestamps: false })
 export default class PerfilMenu extends SequelizeModel<PerfilMenu> {
 
   @ForeignKey(() => Menu)

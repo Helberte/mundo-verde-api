@@ -3,7 +3,7 @@ import { Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import Pessoa from "./pessoa";
 import Empresa from "./empresa";
 
-@Table({tableName: "empresa_pessoa"})
+@Table({tableName: "empresa_pessoa", timestamps: false})
 export default class EmpresaPessoa extends SequelizeModel<EmpresaPessoa> {
 
   @ForeignKey(() => Empresa)

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Helberte/mundo-verde-api#readme",
   "dependencies": {
+    "axios": "^1.7.2",
     "body-parser": "^1.20.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -59,6 +60,7 @@
     "@controle_acesso": "dist/src/controllers/controle_acesso",
     "@controllers": "dist/src/controllers",
     "@models": "dist/src/models/mundo_verde",
-    "@config": "dist/src/config"
+    "@config": "dist/src/config",
+    "@api": "dist/src/api"
   }
 }

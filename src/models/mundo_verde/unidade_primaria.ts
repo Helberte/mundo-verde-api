@@ -2,7 +2,7 @@ import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, Column, DataType, HasMany, Table } from "sequelize-typescript";
 import Produto from "./produto";
 
-@Table({ tableName: "unidade_primaria" })
+@Table({ tableName: "unidade_primaria", timestamps: false })
 export default class UnidadePrimaria extends SequelizeModel<UnidadePrimaria> {
 
   @AllowNull(false)

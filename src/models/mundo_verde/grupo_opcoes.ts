@@ -3,7 +3,7 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } fr
 import Empresa from "./empresa";
 import Opcoes from "./opcao";
 
-@Table({ tableName: "grupo_opcoes" })
+@Table({ tableName: "grupo_opcoes", timestamps: false })
 export default class GrupoOpcoes extends SequelizeModel<GrupoOpcoes> {
 
   @AllowNull(false)

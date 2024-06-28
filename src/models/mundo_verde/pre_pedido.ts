@@ -7,7 +7,7 @@ import PrePedidoItens from "./pre_pedido_itens";
 import RelPrePedidoPedidoCompra from "./rel_pre_pedido_pedido_compra";
 import RelPrePedidoPedidoVenda from "./rel_pre_pedido_pedido_venda";
 
-@Table({tableName: "pre_pedido"})
+@Table({ tableName: "pre_pedido", timestamps: false })
 export default class PrePedido extends SequelizeModel<PrePedido> {
   @AllowNull(true)
   @Column

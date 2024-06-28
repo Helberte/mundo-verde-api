@@ -3,9 +3,9 @@ import { AllowNull, Column, DataType, ForeignKey, Table } from "sequelize-typesc
 import Usuario from "./usuario";
 import Perfil from "./perfil";
 
-@Table({ tableName: "perfil_usuario" })
+@Table({ tableName: "perfil_usuario", timestamps: false })
 export default class PerfilUsuario extends SequelizeModel<PerfilUsuario> {
-  
+
   @ForeignKey(() => Usuario)
   @Column({ field: "fk_usuario_id", type: DataType.NUMBER })
   usuarioId: number;

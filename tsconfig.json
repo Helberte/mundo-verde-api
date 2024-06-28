@@ -7,7 +7,7 @@
     "noUnusedLocals": true,                   /* Habilita o relatório de erros quando variáveis locais não são lidas. */
     "noUnusedParameters": true,               /* Gera um erro quando um parâmetro de função não é lido. */
     "moduleResolution": "node",               /* Especifique como o TypeScript procura um arquivo de um determinado especificador de módulo. */
-    "sourceMap": false,                       /* Cria arquivos de mapa de origem para arquivos JavaScript emitidos. */
+    "sourceMap": true,                       /* Cria arquivos de mapa de origem para arquivos JavaScript emitidos. */
     "outDir": "dist",                         /* Especifique uma pasta de saída para todos os arquivos emitidos. */
     "baseUrl": ".",                           /* Especifique o diretório base para resolver nomes de módulos não relativos. */
     "experimentalDecorators": true,           /* Habilite o suporte experimental para decoradores experimentais legados. */
@@ -18,7 +18,8 @@
       "@controle_acesso/*": ["src/controllers/controle_acesso/*"],
       "@controllers/*": ["src/controllers/*"],
       "@models/*": ["src/models/mundo_verde/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@api/*": ["src/api/*"]
     }
   },
   "include": [

@@ -6,9 +6,9 @@ import PerfilMenu from "./perfil_menu";
 import Usuario from "./usuario";
 import PerfilUsuario from "./perfil_usuario";
 
-@Table({ tableName: "perfil" })
+@Table({ tableName: "perfil", timestamps: false })
 export default class Perfil extends SequelizeModel<Perfil> {
-  
+
   @AllowNull(false)
   @Column
   nome: string;

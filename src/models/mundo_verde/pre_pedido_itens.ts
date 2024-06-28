@@ -3,7 +3,7 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Table } from "seque
 import Produto from "./produto";
 import PrePedido from "./pre_pedido";
 
-@Table({ tableName: "pre_pedido_itens" })
+@Table({ tableName: "pre_pedido_itens", timestamps: false })
 export default class PrePedidoItens extends SequelizeModel<PrePedidoItens> {
   @AllowNull(true)
   @Column
@@ -20,11 +20,11 @@ export default class PrePedidoItens extends SequelizeModel<PrePedidoItens> {
   @AllowNull(true)
   @Column({ field: "valor_sub_total", type: DataType.NUMBER })
   valorSubTotal: number;
-  
+
   @AllowNull(true)
   @Column({ field: "valor_desconto", type: DataType.NUMBER })
   valorDesconto: number;
-  
+
   @ForeignKey(() => Produto)
   @Column({ field: "fk_produto_id", type: DataType.NUMBER })
   produtoId: number;

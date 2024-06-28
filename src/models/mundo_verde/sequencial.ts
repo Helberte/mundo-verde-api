@@ -1,7 +1,7 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, Column, DataType, Table } from "sequelize-typescript";
 
-@Table({ tableName: "sequencial" })
+@Table({ tableName: "sequencial", timestamps: false })
 export default class Sequencial extends SequelizeModel<Sequencial> {
 
   @AllowNull(false)
