@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import Estado from "@models/estado";
 import ibge from "@api/api_ibge";
 import EnderecoController from "../endereco_controller";
-import { CidadeValidator } from "./validacao_dados";
+import { CidadeValidator, CidadeValidatorFind } from "./validacao_dados";
 import Cidade from "@models/cidade";
 import HelperCidade from "@helpers/cidade";
 
@@ -96,24 +96,24 @@ export default class CidadeController extends EnderecoController {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
-/*
+
   public async buscaCidade(req: Request, res: Response): Promise<Response> {
     try {
-      const estado: EstadoValidatorFind = await validaParametros<EstadoValidatorFind, any>(EstadoValidatorFind, req.query);
+      const cidade: CidadeValidatorFind = await validaParametros<CidadeValidatorFind, any>(CidadeValidatorFind, req.query);
 
-      const estadoFind: Estado = new Estado();
+      const cidadeFind: Cidade = new Cidade();
 
-      estadoFind.id     = Number(estado.id);
-      estadoFind.ibgeId = Number(estado.ibgeId);
-      estadoFind.nome   = estado.nome;
-      estadoFind.uf     = estado.uf;
+      cidadeFind.id       = Number(cidade.id);
+      cidadeFind.ibgeId   = Number(cidade.ibgeId);
+      cidadeFind.nome     = cidade.nome;
+      cidadeFind.estadoId = cidade.estadoId;
 
-      const estados: Estado[] = await this.listaEstados(estadoFind);
+      const cidades: Cidade[] = await this.listaCidades(cidadeFind);
 
-      return res.status(200).json({ estados });
+      return res.status(200).json({ cidades });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
-  }*/
+  }
 }
