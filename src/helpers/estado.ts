@@ -7,6 +7,22 @@ class HelperEstado extends Controller {
     return await estado.save();;
   }
 
+  async atualizarEstado(estado: Estado): Promise<void> {
+    const linhasAfetadas: number[] = await Estado.update(
+      {
+        nome: estado.nome,
+        uf: estado.uf
+      }, {
+      where: {
+        id: estado.id,
+        ibgeId: estado.ibgeId
+      }
+    });
+
+    if (linhasAfetadas[0] < 1) 
+      throw new Error("Nenhum registro foi atualizado.");    
+  }
+
 }
 
 export default HelperEstado;
