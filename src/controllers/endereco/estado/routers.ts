@@ -11,6 +11,9 @@ router.put("/estado", async (req: Request, res: Response) => {
   await (new Estado()).atualizaEstado(req, res);
 })
 
+router.get("/estado", async (req: Request, res: Response) => {
+  await (new Estado()).buscaEstado(req, res);
+})
 
 
 export default router;

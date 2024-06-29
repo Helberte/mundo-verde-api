@@ -11,6 +11,10 @@ class Ibge {
   async obterEstado<T>(ibgeId: number): Promise<T> {
     return (await requisicao.get<T>(this.baseUrl + "estados/" + String(ibgeId))).data;
   }
+
+  async obterMunicipio<T>(ibgeId: number): Promise<T> {
+    return (await requisicao.get<T>(this.baseUrl + "municipios/" + String(ibgeId))).data;
+  }
 }
 
 export default new Ibge;

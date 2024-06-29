@@ -1,6 +1,6 @@
 import { validaParametros, validaRespostaRequisicao } from "@helpers/utils";
 import { Request, Response } from "express";
-import { EstadoValidator, EstadoValidatorEditar } from "./validacao_dados";
+import { EstadoValidator, EstadoValidatorEditar, EstadoValidatorFind } from "./validacao_dados";
 import Estado from "@models/estado";
 import ibge from "@api/api_ibge";
 import HelperEstado from "@helpers/estado";
@@ -31,7 +31,7 @@ export default class EstadoController extends EnderecoController {
 
       if (estadoExistente)
         throw new Error(`O estado ${estado.nome} IBGEID: ${estado.ibgeId} Já existe cadastrado.`);
-      
+
       // ------------------------------------------------------------------------------------------------------
 
       // consultar o ibgeid na api do ibge para ver se de fato o estado existe
@@ -83,7 +83,7 @@ export default class EstadoController extends EnderecoController {
         throw new Error(`O estado ${estado.nome} IBGEID: ${estado.ibgeId} ID: ${estado.id} não existe cadastrado.`);
 
       //---------------------------------------------------------------------------------------------------------------------------
-            
+
       // consultar o ibgeid na api do ibge para ver se de fato o estado existe
       const estadoIBGE: EstadoIbge = await ibge.obterEstado<EstadoIbge>(estado.ibgeId);
 
@@ -113,7 +113,27 @@ export default class EstadoController extends EnderecoController {
       return res.status(200).json({
         mensagem: "Estado atualzado com sucesso!"
       });
-      
+
+    } catch (error) {
+      return res.status(500).json({ erro: (error as Error).message });
+    }
+  }
+
+  public async buscaEstado(req: Request, res: Response): Promise<Response> {
+    try {
+      const estado: EstadoValidatorFind = await validaParametros<EstadoValidatorFind, any>(EstadoValidatorFind, req.query);
+
+      const estadoFind: Estado = new Estado();
+
+      estadoFind.id     = Number(estado.id);
+      estadoFind.ibgeId = Number(estado.ibgeId);
+      estadoFind.nome   = estado.nome;
+      estadoFind.uf     = estado.uf;
+
+      const estados: Estado[] = await this.listaEstados(estadoFind);
+
+      return res.status(200).json({ estados });
+
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }

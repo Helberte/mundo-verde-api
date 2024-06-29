@@ -1,11 +1,17 @@
 import { Router } from "express";
 import autenticacao from "@controle_acesso/routers";
-import endereco from "@controllers/endereco/estado/routers";
+import estado from "@controllers/endereco/estado/routers";
+import cidade from "@controllers/endereco/cidade/routers";
 
 const router = Router();
 
 router.use("/login", autenticacao)
-router.use("/endereco", endereco);
 
+//#region Endereço
+
+router.use("/endereco", estado);
+router.use("/endereco", cidade);
+
+//#endregion
 
 export default router;
