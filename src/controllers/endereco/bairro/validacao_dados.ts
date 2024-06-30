@@ -21,11 +21,11 @@ class BairroValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   nome: string;
 
-  @IsNumberString(undefined, {message: "Id da Cidade é inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "Id da Cidade é inválido"})
   @IsOptional()
   cidadeId: number;
   
-  @IsNumberString(undefined, {message: "Id do Bairro é inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "Id do Bairro é inválido"})
   @IsOptional()
   id: number;
 }

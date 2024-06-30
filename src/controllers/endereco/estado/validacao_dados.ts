@@ -39,11 +39,11 @@ class EstadoValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   uf: string;
 
-  @IsNumberString(undefined, {message: "ibgeId inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "ibgeId inválido"})
   @IsOptional()
   ibgeId: number;
 
-  @IsNumberString(undefined, {message: "Id inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "Id inválido"})
   @IsOptional()
   id: number;
 }

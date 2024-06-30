@@ -25,15 +25,15 @@ class CidadeValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   nome: string;
 
-  @IsNumberString(undefined, {message: "ibgeId inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "ibgeId inválido"})
   @IsOptional()
   ibgeId: number;
 
-  @IsNumberString(undefined, {message: "Id do Estado é inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "Id do Estado é inválido"})
   @IsOptional()
   estadoId: number;
   
-  @IsNumberString(undefined, {message: "Id inválido"})
+  @IsNumberString({ no_symbols: true }, {message: "Id inválido"})
   @IsOptional()
   id: number;
 }
