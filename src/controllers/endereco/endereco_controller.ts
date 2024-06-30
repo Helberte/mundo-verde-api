@@ -88,7 +88,7 @@ class EnderecoController extends Controller {
     return cidade;
   }
 
-   public async listaCidades(cidade?: Cidade, limit: number = 50): Promise<Cidade[]> {
+  public async listaCidades(cidade?: Cidade, limit: number = 50): Promise<Cidade[]> {
     let find:     any = { };
     let findLike: any = { };
 
@@ -148,6 +148,33 @@ class EnderecoController extends Controller {
     });
 
     return bairro;
+  }
+
+  public async listaBairros(bairro?: Bairro, limit: number = 50): Promise<Bairro[]> {
+    let find:     any = { };
+    let findLike: any = { };
+
+    if (bairro?.id)
+      find.id = bairro.id;
+
+    if (bairro?.cidadeId)
+      find.cidadeId = bairro.cidadeId;
+
+    if (bairro?.nome)
+      findLike.nome = bairro.nome;
+
+    return await Bairro.findAll({
+      where: {
+        ...find,
+        nome: {
+          [Op.substring]: findLike.nome ? findLike.nome : ""
+        }
+      },
+      order: [
+        ["nome", "ASC"]
+      ],
+      limit
+    });
   }
 
   //#endregion

@@ -1,7 +1,7 @@
 import { validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
 import EnderecoController from "../endereco_controller";
-import { BairroValidator } from "./validacao_dados";
+import { BairroValidator, BairroValidatorFind } from "./validacao_dados";
 import Bairro from "@models/bairro";
 import Cidade from "@models/cidade";
 import HelperBairro from "@helpers/bairro";
@@ -45,24 +45,23 @@ export default class BairroController extends EnderecoController {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
-/*
+
   public async buscaBairro(req: Request, res: Response): Promise<Response> {
     try {
-      const cidade: CidadeValidatorFind = await validaParametros<CidadeValidatorFind, any>(CidadeValidatorFind, req.query);
+      const bairro: BairroValidatorFind = await validaParametros<BairroValidatorFind, any>(BairroValidatorFind, req.query);
 
-      const cidadeFind: Cidade = new Cidade();
+      const bairroFind: Bairro = new Bairro();
 
-      cidadeFind.id       = Number(cidade.id);
-      cidadeFind.ibgeId   = Number(cidade.ibgeId);
-      cidadeFind.nome     = cidade.nome;
-      cidadeFind.estadoId = cidade.estadoId;
+      bairroFind.nome     = bairro.nome;
+      bairroFind.id       = Number(bairro.id);
+      bairroFind.cidadeId = Number(bairro.cidadeId);
 
-      const cidades: Cidade[] = await this.listaCidades(cidadeFind);
+      const bairros: Bairro[] = await this.listaBairros(bairroFind);
 
-      return res.status(200).json({ cidades });
+      return res.status(200).json({ bairros });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
-  }*/
+  }
 }

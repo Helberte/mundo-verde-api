@@ -15,7 +15,7 @@ class BairroValidator {
 }
 
 class BairroValidatorFind {
-  @Length(2, 70, { message: "O tamanho do nome é inválido" })
+  @Length(1, 70, { message: "O tamanho do nome é inválido" })
   @IsString({ message: "O nome precisa ser um texto" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))

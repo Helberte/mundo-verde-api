@@ -7,8 +7,8 @@ router.post("/bairro", async (req: Request, res: Response) => {
   await (new Bairro()).criarBairro(req, res);
 });
 
-// router.get("/bairro", async (req: Request, res: Response) => {
-//   await (new Bairro()).buscaCidade(req, res);
-// });
+router.get("/bairro", async (req: Request, res: Response) => {
+  await (new Bairro()).buscaBairro(req, res);
+});
 
 export default router;
