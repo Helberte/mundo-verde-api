@@ -17,8 +17,8 @@ export default class GrupoEmpresaController extends EmpresaController {
       // insere o grupo
       const novoGrupo: GrupoEmpresa = new GrupoEmpresa();
 
-      novoGrupo.nome   = grupoEmpresa.nome;
-      novoGrupo.codigo = grupoEmpresa.codigo;
+      novoGrupo.nome      = grupoEmpresa.nome;
+      novoGrupo.codigo    = grupoEmpresa.codigo;
 
       const retorno: GrupoEmpresa = await (new HelperGrupoEmpresa()).insereGrupoEmpresa(novoGrupo);
 
@@ -40,9 +40,9 @@ export default class GrupoEmpresaController extends EmpresaController {
 
       // esta rota precisa do usuário, para não listar todos os grupos de empresas presentes no banco
       // mas listar apenas os grupos das empresas na qual o usuário tem acesso
-      
+
       // O processo de login o usuário irá informar qual grupo e empresa ele irá querer entrar para navegar no sistema
-      
+
       const grupoEmpresaFind: GrupoEmpresa = new GrupoEmpresa();
 
       grupoEmpresaFind.nome   = grupoEmpresa.nome;
@@ -72,7 +72,7 @@ export default class GrupoEmpresaController extends EmpresaController {
       const empresas: Empresa[] = await this.obtemEmpresasComGrupoEmpresa(grupoEmpresa.id, grupoEmpresa.codigo);
 
       if (empresas.length > 0) {
-        return res.status(200).json({ 
+        return res.status(200).json({
           quantidadeEmpresas: empresas.length,
           empresas
          });
@@ -84,7 +84,7 @@ export default class GrupoEmpresaController extends EmpresaController {
       return res.status(200).json({ mensagem: "Grupo Empresa excluído com sucesso!" });
 
       /*
-      
+
       verificar porque não stá pondo is null em deleted_at nas consultas
       verificar porque está gravando updated_at nas exclusões
 

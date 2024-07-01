@@ -27,7 +27,7 @@ class GrupoEmpresaValidatorFind {
   @IsNumberString({ no_symbols: true }, {message: "Codigo do grupo é inválido"})
   @IsOptional()
   codigo: string;
-  
+
   @IsNumberString({ no_symbols: true }, {message: "Id do Grupo é inválido"})
   @IsOptional()
   id: number;

@@ -47,7 +47,7 @@ class EmpresaController extends Controller {
 
   public async obtemEmpresasComGrupoEmpresa(idGrupo: number, codigo: string): Promise<Empresa[]> {
 
-    const empresas: Empresa[] = await Empresa.findAll({    
+    const empresas: Empresa[] = await Empresa.findAll({
       include: {
         model: GrupoEmpresa,
         required: true,
