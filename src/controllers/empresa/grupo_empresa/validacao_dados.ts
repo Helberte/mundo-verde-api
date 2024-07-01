@@ -1,5 +1,5 @@
 import { Transform, TransformFnParams } from "class-transformer";
-import { IsNotEmpty, IsNumberString, IsOptional, IsString, Length } from "class-validator";
+import { IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, Length } from "class-validator";
 import sanitizeHtml from "sanitize-html";
 
 class GrupoEmpresaValidator {
@@ -23,6 +23,7 @@ class GrupoEmpresaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   nome: string;
 
+  @Length(3, 3, { message: "O tamanho do codigo é inválido" })
   @IsNumberString({ no_symbols: true }, {message: "Codigo do grupo é inválido"})
   @IsOptional()
   codigo: string;
@@ -32,4 +33,20 @@ class GrupoEmpresaValidatorFind {
   id: number;
 }
 
-export { GrupoEmpresaValidator, GrupoEmpresaValidatorFind }
+class GrupoEmpresaValidatorDelete {
+  @IsNumber({ maxDecimalPlaces: 0 }, {message: "Id do Grupo precisa ser um número inteiro."})
+  @IsNotEmpty({ message: "O Id do grupo é obrigatório" })
+  id: number;
+
+  @Length(3, 3, { message: "O tamanho do codigo é inválido" })
+  @IsNotEmpty({ message: "O codigo do grupo é obrigatório" })
+  @IsNumberString({ no_symbols: true }, {message: "Codigo do grupo é inválido"})
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  codigo: string;
+}
+
+export {
+  GrupoEmpresaValidator,
+  GrupoEmpresaValidatorFind,
+  GrupoEmpresaValidatorDelete
+}

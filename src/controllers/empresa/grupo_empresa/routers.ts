@@ -7,8 +7,12 @@ router.post("/grupos-empresas", async (req: Request, res: Response) => {
   await (new GrupoEmpresa()).criarGrupoEmpresa(req, res);
 });
 
-// router.get("/bairro", async (req: Request, res: Response) => {
-//   await (new Bairro()).buscaBairro(req, res);
-// });
+router.get("/grupos-empresas", async (req: Request, res: Response) => {
+  await (new GrupoEmpresa()).buscaGrupoEmpresa(req, res);
+});
+
+router.delete("/grupos-empresas", async (req: Request, res: Response) => {
+  await (new GrupoEmpresa()).excluirGrupoEmpresa(req, res);
+});
 
 export default router;
