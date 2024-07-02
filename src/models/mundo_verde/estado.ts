@@ -1,6 +1,7 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { Table, Column, AllowNull, HasMany, DataType } from "sequelize-typescript";
 import Cidade from "./cidade";
+import Endereco from "./endereco";
 
 @Table({ tableName: "estado", updatedAt: false })
 export default class Estado extends SequelizeModel<Estado> {
@@ -19,4 +20,7 @@ export default class Estado extends SequelizeModel<Estado> {
 
   @HasMany(() => Cidade)
   cidades: Cidade[];
+
+  @HasMany(() => Endereco)
+  enderecos: Endereco[];
 }

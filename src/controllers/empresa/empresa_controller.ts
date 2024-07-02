@@ -32,7 +32,6 @@ class EmpresaController extends Controller {
       findLike.nome = grupoEmpresa.nome;
 
     return await GrupoEmpresa.findAll({
-      attributes: ["createdAt"],
       where: {
         ...find,
         nome: {
@@ -62,6 +61,29 @@ class EmpresaController extends Controller {
     });
 
     return empresas;
+  }
+
+  //#endregion
+
+  //#region Empresa
+
+  async obtemEmpresa(cnpj?: string, id?: number): Promise<Empresa> {
+    const where: any = { };
+
+    if (!cnpj && !id)
+      throw new Error("Para buscar uma empresa é preciso informar ou o ID ou o CNPJ da mesma.");
+
+    if (cnpj)
+      where.cnpj = cnpj;
+
+    if (id)
+      where.id = id;
+
+    const empresa: Empresa = await Empresa.findOne({
+      where
+    })
+
+    return empresa;
   }
 
   //#endregion

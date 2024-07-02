@@ -2,6 +2,7 @@ import { plainToClass } from "class-transformer";
 import { ValidationError, isArray, validate } from "class-validator";
 import moment from "moment";
 import { literal } from "sequelize";
+import { isInt } from "validator";
 
 export async function validaParametros<T extends Object, O>(classe: new () => T, objeto: O): Promise<T> {
   const objetoResultante: T = plainToClass<T, O>(classe, objeto)
@@ -46,4 +47,89 @@ export function deleteCamposDefault(): any {
     deletedAt: moment(),
     updatedAt: literal("IFNULL(updated_at, null)")
   }
+}
+
+export function validarCNPJ(cnpj: string): Boolean {
+
+  let valor:       string = "";
+  let contador_1:  number = 0;
+
+  let soma_1:      number = 0;
+  let soma_2:      number = 0;
+  let restoDiv_1:  number = 0;
+  let restoDiv_2:  number = 0;
+
+  let digitoVerificador_1: number = 0;
+  let digitoVerificador_2: number = 0;
+
+  const array_1:   number[] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  const array_2:   number[] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+  /*
+
+  fonte:
+  https://blog.dbins.com.br/como-funciona-a-logica-da-validacao-do-cnpj
+  https://www.macoratti.net/alg_cnpj.htm
+
+  O cnpj é formado por 14 numeros
+  12 numeros base e
+  2 digitos verificadores
+
+  os 2 verificadores servem para validar os 12 primeiros base.
+
+  OBS: Mesmo que o número do cnpj seja válido, não significa que o mesmo está cadastrado na Receita Federal.
+  */
+
+  // desconsidera tudo que não é número inteiro
+  for (const caractere of cnpj) {
+    if (isInt(caractere))
+      valor += caractere;
+  }
+
+  // desconsidera fora do tamanho correto
+  if (valor.length != 14)
+    return false;
+
+  // compara o 1° valor com o restante e se forem todos iguais, desconsidera o cnpj
+  for (let i = 0; i < valor.length; i++) {
+    if (valor[0] === valor[i])
+      contador_1 = contador_1 + 1;
+  }
+
+  if (contador_1 === 14)
+    return false;
+
+
+  for (let i = 0; i < array_1.length; i++) {
+    soma_1 = soma_1 + (Number(valor[i]) * array_1[i]);
+  }
+
+  restoDiv_1 = soma_1 % 11;
+
+  if (restoDiv_1 < 2)
+    digitoVerificador_1 = 0;
+  else
+  if ([2, 3, 4, 5, 6, 7, 8, 9, 10].includes(restoDiv_1))
+    digitoVerificador_1 = 11 - restoDiv_1;
+  else
+    return false;
+
+  for (let i = 0; i < array_2.length; i++) {
+    soma_2 = soma_2 + (Number(valor[i]) * array_2[i]);
+  }
+
+  restoDiv_2 = soma_2 % 11;
+
+  if (restoDiv_2 < 2)
+    digitoVerificador_2 = 0;
+  else
+  if ([2, 3, 4, 5, 6, 7, 8, 9, 10].includes(restoDiv_2))
+    digitoVerificador_2 = 11 - restoDiv_2;
+  else
+    return false;
+
+  if (Number(valor[12]) === digitoVerificador_1 && Number(valor[13]) === digitoVerificador_2)
+    return true;
+  else
+    return false;
 }

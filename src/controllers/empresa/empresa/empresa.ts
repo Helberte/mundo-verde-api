@@ -1,18 +1,23 @@
 import { validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
-import { GrupoEmpresaValidator, GrupoEmpresaValidatorDelete, GrupoEmpresaValidatorFind } from "./validacao_dados";
+import { EmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
 import GrupoEmpresa from "@models/grupo_empresa";
 import HelperGrupoEmpresa from "@helpers/grupoEmpresa";
 import Empresa from "@models/empresa";
 
-export default class GrupoEmpresaController extends EmpresaController {
+export default class EmpresasController extends EmpresaController {
 
-  public async criarGrupoEmpresa(req: Request, res: Response): Promise<Response> {
+  public async criarEmpresa(req: Request, res: Response): Promise<Response> {
     try {
-      const grupoEmpresa: GrupoEmpresaValidator = await validaParametros<GrupoEmpresaValidator, any>(GrupoEmpresaValidator, req.body);
+      const empresa: EmpresaValidator = await validaParametros<EmpresaValidator, any>(EmpresaValidator, req.body);
 
       // ------------------------------------------------------------------------------------------------------
+
+      const empresaExistente: Empresa = await this.obtemEmpresa(empresa.cnpj.trim());
+
+      if (empresaExistente)
+        throw new Error(`Já existe uma empresa com o mesmo CNPJ: ${empresa.cnpj}`);
 
       // insere o grupo
       const novoGrupo: GrupoEmpresa = new GrupoEmpresa();
@@ -34,15 +39,11 @@ export default class GrupoEmpresaController extends EmpresaController {
     }
   }
 
-  public async buscaGrupoEmpresa(req: Request, res: Response): Promise<Response> {
+  public async buscaEmpresa(req: Request, res: Response): Promise<Response> {
     try {
       const grupoEmpresa: GrupoEmpresaValidatorFind = await validaParametros<GrupoEmpresaValidatorFind, any>(GrupoEmpresaValidatorFind, req.query);
 
-      // esta rota precisa do usuário, para não listar todos os grupos de empresas presentes no banco
-      // mas listar apenas os grupos das empresas na qual o usuário tem acesso
-
-      // O processo de login o usuário irá informar qual grupo e empresa ele irá querer entrar para navegar no sistema
-
+      // só irá conseguir buscar as empresas que o usuário tiver acesso
       const grupoEmpresaFind: GrupoEmpresa = new GrupoEmpresa();
 
       grupoEmpresaFind.nome   = grupoEmpresa.nome;
@@ -58,7 +59,7 @@ export default class GrupoEmpresaController extends EmpresaController {
     }
   }
 
-  public async excluirGrupoEmpresa(req: Request, res: Response): Promise<Response> {
+  public async excluirEmpresa(req: Request, res: Response): Promise<Response> {
     try {
       // por enquanto ainda não tem validação de usuário com o grupo de empresas, mas precisará existir
 
@@ -86,5 +87,9 @@ export default class GrupoEmpresaController extends EmpresaController {
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
+  }
+
+  public async atualizaEmpresa(req: Request, res: Response): Promise<Response> {
+
   }
 }

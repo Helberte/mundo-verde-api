@@ -24,7 +24,7 @@ class BairroValidatorFind {
   @IsNumberString({ no_symbols: true }, {message: "Id da Cidade é inválido"})
   @IsOptional()
   cidadeId: number;
-  
+
   @IsNumberString({ no_symbols: true }, {message: "Id do Bairro é inválido"})
   @IsOptional()
   id: number;

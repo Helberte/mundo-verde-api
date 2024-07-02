@@ -2,6 +2,7 @@ import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
 import Estado from "./estado";
 import Bairro from "./bairro";
+import Endereco from "./endereco";
 
 @Table( { tableName: "cidade", updatedAt: false } )
 export default class Cidade extends SequelizeModel<Cidade> {
@@ -23,4 +24,7 @@ export default class Cidade extends SequelizeModel<Cidade> {
 
   @HasMany(() => Bairro)
   bairros: Bairro[];
+
+  @HasMany(() => Endereco)
+  enderecos: Endereco[];
 }
