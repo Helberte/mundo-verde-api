@@ -3,7 +3,7 @@ import { AllowNull, BelongsToMany, Column, DataType, Table } from "sequelize-typ
 import Usuario from "./usuario";
 import FuncaoUsuario from "./funcao_usuario";
 
-@Table({ tableName: "funcao", timestamps: false })
+@Table({ tableName: "funcao", updatedAt: false })
 export default class Funcao extends SequelizeModel<Funcao> {
   @AllowNull(false)
   @Column

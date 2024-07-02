@@ -3,7 +3,7 @@ import { BelongsTo, Column, DataType, ForeignKey, Table } from "sequelize-typesc
 import PedidoCompra from "./pedido_compra";
 import Representante from "./representante";
 
-@Table({ tableName: "rel_representante_pedido_compra", timestamps: false })
+@Table({ tableName: "rel_representante_pedido_compra", updatedAt: false })
 export default class RelRepresentantePedidoCompra extends SequelizeModel<RelRepresentantePedidoCompra> {
   @ForeignKey(() => Representante)
   @Column({ field: "fk_representante_id", type: DataType.NUMBER })

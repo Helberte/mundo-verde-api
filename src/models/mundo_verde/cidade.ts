@@ -3,7 +3,7 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } fr
 import Estado from "./estado";
 import Bairro from "./bairro";
 
-@Table( { tableName: "cidade", timestamps: false } )
+@Table( { tableName: "cidade", updatedAt: false } )
 export default class Cidade extends SequelizeModel<Cidade> {
 
   @AllowNull(false)

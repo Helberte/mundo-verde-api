@@ -3,7 +3,7 @@ import { AllowNull, Column, DataType, ForeignKey, Table } from "sequelize-typesc
 import Usuario from "./usuario";
 import Funcao from "./funcao";
 
-@Table({ tableName: "funcao_usuario", timestamps: false })
+@Table({ tableName: "funcao_usuario", updatedAt: false })
 export default class FuncaoUsuario extends SequelizeModel<FuncaoUsuario> {
 
   @ForeignKey(() => Usuario)

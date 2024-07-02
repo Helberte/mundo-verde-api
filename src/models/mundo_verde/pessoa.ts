@@ -7,7 +7,7 @@ import EmpresaPessoa from "./empresa_pessoa";
 import Usuario from "./usuario";
 import Representante from "./representante";
 
-@Table({ tableName: "pessoa", timestamps: false })
+@Table({ tableName: "pessoa", updatedAt: false })
 export default class Pessoa extends SequelizeModel<Pessoa> {
 
   @AllowNull(false)

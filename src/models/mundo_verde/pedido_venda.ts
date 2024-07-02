@@ -9,7 +9,7 @@ import RelVendedorGestorPedidoVenda from "./rel_vendedor_gestor_pedido_venda";
 import RelVendedorPedidoVenda from "./rel_vendedor_pedido_venda";
 import RelPrePedidoPedidoVenda from "./rel_pre_pedido_pedido_venda";
 
-@Table({ tableName: "pedido_venda", timestamps: false })
+@Table({ tableName: "pedido_venda", updatedAt: false })
 export default class PedidoVenda extends SequelizeModel<PedidoVenda> {
   @AllowNull(true)
   @Column

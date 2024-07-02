@@ -2,7 +2,7 @@ import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, Column, HasMany, Table } from "sequelize-typescript";
 import Empresa from "./empresa";
 
-@Table({ tableName: "grupo_empresa", timestamps: false, updatedAt: false })
+@Table({ tableName: "grupo_empresa", updatedAt: false })
 export default class GrupoEmpresa extends SequelizeModel<GrupoEmpresa> {
   @AllowNull(false)
   @Column

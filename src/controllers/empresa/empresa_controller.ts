@@ -33,7 +33,7 @@ class EmpresaController extends Controller {
 
     return await GrupoEmpresa.findAll({
       where: {
-        ...find,        
+        ...find,
         nome: {
           [Op.substring]: findLike.nome ? findLike.nome : ""
         }
@@ -48,7 +48,9 @@ class EmpresaController extends Controller {
   public async obtemEmpresasComGrupoEmpresa(idGrupo: number, codigo: string): Promise<Empresa[]> {
 
     const empresas: Empresa[] = await Empresa.findAll({
+      attributes: ["id", "razao_social", "nome_fantasia", "cnpj"],
       include: {
+        attributes: ["id"],
         model: GrupoEmpresa,
         required: true,
         where: {

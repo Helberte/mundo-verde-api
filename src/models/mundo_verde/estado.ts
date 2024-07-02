@@ -2,7 +2,7 @@ import SequelizeModel from "@core/database/sequelize_model";
 import { Table, Column, AllowNull, HasMany, DataType } from "sequelize-typescript";
 import Cidade from "./cidade";
 
-@Table( { tableName: "estado", timestamps: false } )
+@Table({ tableName: "estado", updatedAt: false })
 export default class Estado extends SequelizeModel<Estado> {
 
   @AllowNull(false)

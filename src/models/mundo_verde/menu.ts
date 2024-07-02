@@ -5,7 +5,7 @@ import MenuUsuarioEspecifico from "./menu_usuario_especifico";
 import Perfil from "./perfil";
 import PerfilMenu from "./perfil_menu";
 
-@Table({ tableName: "menu", timestamps: false })
+@Table({ tableName: "menu", updatedAt: false })
 export default class Menu extends SequelizeModel<Menu> {
 
   @AllowNull(false)

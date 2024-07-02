@@ -4,7 +4,7 @@ import Opcoes from "./opcao";
 import Empresa from "./empresa";
 import Pessoa from "./pessoa";
 
-@Table({ tableName: "endereco", timestamps: false })
+@Table({ tableName: "endereco", updatedAt: false })
 export default class Endereco extends SequelizeModel<Endereco> {
 
   @AllowNull(false)

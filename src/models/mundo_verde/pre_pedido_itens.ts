@@ -3,7 +3,7 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Table } from "seque
 import Produto from "./produto";
 import PrePedido from "./pre_pedido";
 
-@Table({ tableName: "pre_pedido_itens", timestamps: false })
+@Table({ tableName: "pre_pedido_itens", updatedAt: false })
 export default class PrePedidoItens extends SequelizeModel<PrePedidoItens> {
   @AllowNull(true)
   @Column

@@ -8,7 +8,7 @@ import RelPrePedidoPedidoCompra from "./rel_pre_pedido_pedido_compra";
 import RelRepresentantePedidoCompra from "./rel_representante_pedido_compra";
 import RelPedidoCompraPedidoVenda from "./rel_pedido_compra_pedido_venda";
 
-@Table({ tableName: "pedido_compra", timestamps: false })
+@Table({ tableName: "pedido_compra", updatedAt: false })
 export default class PedidoCompra extends SequelizeModel<PedidoCompra> {
   @AllowNull(true)
   @Column

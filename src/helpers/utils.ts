@@ -1,5 +1,7 @@
 import { plainToClass } from "class-transformer";
 import { ValidationError, isArray, validate } from "class-validator";
+import moment from "moment";
+import { literal } from "sequelize";
 
 export async function validaParametros<T extends Object, O>(classe: new () => T, objeto: O): Promise<T> {
   const objetoResultante: T = plainToClass<T, O>(classe, objeto)
@@ -29,4 +31,19 @@ export function validaRespostaRequisicao(parametro: any) : boolean {
   }
 
   return true;
+}
+
+/**
+ * @description Retorna um objeto contendo os campos padrões que devem ser
+ * preenchidos numa operação de delete suave.
+ *
+ * @returns Objeto com campos padrões para operação de delete suave
+ *
+ * @author Helberte Costa
+ */
+export function deleteCamposDefault(): any {
+  return {
+    deletedAt: moment(),
+    updatedAt: literal("IFNULL(updated_at, null)")
+  }
 }

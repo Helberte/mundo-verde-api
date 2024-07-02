@@ -3,7 +3,7 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } fr
 import ComposicaoPreco from "./composicao_preco";
 import Representante from "./representante";
 
-@Table({ tableName: "tipo_representante", timestamps: false })
+@Table({ tableName: "tipo_representante", updatedAt: false })
 export default class TipoRepresentante extends SequelizeModel<TipoRepresentante> {
   @AllowNull(false)
   @Column

@@ -6,7 +6,7 @@ import PrePedidoItens from "./pre_pedido_itens";
 import PedidoCompraItens from "./pedido_compra_itens";
 import PedidoVendaItens from "./pedido_venda_itens";
 
-@Table({ tableName: "produto", timestamps: false })
+@Table({ tableName: "produto", updatedAt: false })
 export default class Produto extends SequelizeModel<Produto> {
   @AllowNull(false)
   @Column
