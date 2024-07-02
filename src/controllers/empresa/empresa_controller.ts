@@ -32,6 +32,7 @@ class EmpresaController extends Controller {
       findLike.nome = grupoEmpresa.nome;
 
     return await GrupoEmpresa.findAll({
+      attributes: ["createdAt"],
       where: {
         ...find,
         nome: {

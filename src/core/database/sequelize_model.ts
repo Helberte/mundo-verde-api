@@ -1,5 +1,5 @@
-import { Moment } from "moment";
-import { AutoIncrement, Column, CreatedAt, DataType, DeletedAt, Model, PrimaryKey, UpdatedAt } from "sequelize-typescript";
+import moment, { Moment } from "moment";
+import { AutoIncrement, BeforeFind, Column, CreatedAt, DataType, DeletedAt, Model, PrimaryKey, UpdatedAt } from "sequelize-typescript";
 
 export default class SequelizeModel<T> extends Model<T> {
   @AutoIncrement
@@ -27,4 +27,17 @@ export default class SequelizeModel<T> extends Model<T> {
 
   @Column({ field: "deleted_by", type: DataType.NUMBER})
   deletedBy: number;
+
+  @BeforeFind
+  static formatDates(instance: SequelizeModel<any>) {
+    if (instance.createdAt) {
+      instance.createdAt = moment(instance.createdAt, "YYYY-MM-DD HH:mm:ss");
+    }
+    if (instance.updatedAt) {
+      instance.updatedAt = moment(instance.updatedAt, "YYYY-MM-DD HH:mm:ss");
+    }
+    if (instance.deletedAt) {
+      instance.deletedAt = moment(instance.deletedAt, "YYYY-MM-DD HH:mm:ss");
+    }
+  }
 }
