@@ -28,8 +28,7 @@ class Database {
         },
         dialectOptions: {
           connectTimeout: 10000
-        },
-        timezone: "-04:00"
+        }
       }
     );
 
