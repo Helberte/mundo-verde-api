@@ -33,7 +33,7 @@ class EmpresaController extends Controller {
 
     return await GrupoEmpresa.findAll({
       where: {
-        ...find,
+        ...find,        
         nome: {
           [Op.substring]: findLike.nome ? findLike.nome : ""
         }

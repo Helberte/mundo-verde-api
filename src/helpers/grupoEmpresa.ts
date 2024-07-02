@@ -1,5 +1,6 @@
 import Controller from "@controllers/controller";
 import GrupoEmpresa from "@models/grupo_empresa";
+import moment from "moment";
 
 class HelperGrupoEmpresa extends Controller {
 
@@ -9,14 +10,17 @@ class HelperGrupoEmpresa extends Controller {
 
   async excluiGrupoEmpresa(grupoEmpresa: GrupoEmpresa): Promise<void> {
 
-    const linhasAfetadas: number = await GrupoEmpresa.destroy({
+    const linhasAfetadas: number[] = await GrupoEmpresa.update({
+      deletedAt: moment(),
+      updatedAt: null
+    }, {
       where: {
         id: grupoEmpresa.id,
         codigo: grupoEmpresa.codigo
       }
     });
 
-    if (linhasAfetadas < 1)
+    if (linhasAfetadas[0] < 1)
       throw new Error("Nenhum grupo de empresas foi excluído.")
   }
 }

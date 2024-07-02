@@ -85,7 +85,7 @@ export default class GrupoEmpresaController extends EmpresaController {
 
       /*
 
-      verificar porque não stá pondo is null em deleted_at nas consultas
+      verificar porque não está pondo is null em deleted_at nas consultas
       verificar porque está gravando updated_at nas exclusões
 
       */
