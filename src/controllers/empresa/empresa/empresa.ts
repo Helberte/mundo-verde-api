@@ -1,13 +1,10 @@
-import { validaParametros } from "@helpers/utils";
+import { limpaFormatacaoCNPJ, validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
-import { EmpresaValidator, EmpresaValidatorFind } from "./validacao_dados";
+import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorUpdate } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
 import Empresa from "@models/empresa";
 import HelperEmpresa from "@helpers/empresa";
 import GrupoEmpresa from "@models/grupo_empresa";
-// import GrupoEmpresa from "@models/grupo_empresa";
-// import HelperGrupoEmpresa from "@helpers/grupoEmpresa";
-// import Empresa from "@models/empresa";
 
 export default class EmpresasController extends EmpresaController {
 
@@ -22,7 +19,7 @@ export default class EmpresasController extends EmpresaController {
       if (empresaExistente)
         throw new Error(`Já existe uma empresa com o mesmo CNPJ: ${empresa.cnpj}`);
 
-      empresaExistente = await this.obtemEmpresaPorNome(empresa.razaoSocial, empresa.nomeFantasia);
+      empresaExistente = await this.obtemEmpresaPorNome(empresa.razaoSocial, empresa.nomeFantasia) as Empresa;
 
       if (empresaExistente)
         throw new Error(`Já existe empresa com o mesmo nome fantasia/razão social`);
@@ -81,39 +78,80 @@ export default class EmpresasController extends EmpresaController {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
-/*
-  public async excluirEmpresa(req: Request, res: Response): Promise<Response> {
+
+  public async atualizaEmpresa(req: Request, res: Response): Promise<Response> {
     try {
-      // por enquanto ainda não tem validação de usuário com o grupo de empresas, mas precisará existir
+      const empresa: EmpresaValidatorUpdate = await validaParametros<EmpresaValidatorUpdate, any>(EmpresaValidatorUpdate, req.body);
+      const values: any = { };
 
-      const grupoEmpresa: GrupoEmpresaValidatorDelete = await validaParametros<GrupoEmpresaValidatorDelete, any>(GrupoEmpresaValidatorDelete, req.body);
+      // ------------------------------------------------------------------------------------------------------
 
-      const grupoExistente: GrupoEmpresa = await this.obtemGrupoEmpresa(grupoEmpresa.id, grupoEmpresa.codigo ? grupoEmpresa.codigo : undefined);
+      // verifica se a empresa existe
+      let empresaExistente: Empresa = await this.obtemEmpresa(undefined, empresa.id);
 
-      if (!grupoExistente)
-        throw new Error("Grupo de Empresas informado não existe cadastrado na base de dados.");
+      if (!empresaExistente)
+        throw new Error(`Esta empresa ainda não existe cadastrada na nossa base de dados. CNPJ: ${empresa.cnpj}`);
 
-      const empresas: Empresa[] = await this.obtemEmpresasComGrupoEmpresa(grupoEmpresa.id, grupoEmpresa.codigo);
+      // ------------------------------------------------------------------------------------------------------
 
-      if (empresas.length > 0) {
-        return res.status(200).json({
-          quantidadeEmpresas: empresas.length,
-          empresas
-         });
+      // verifica se existe outra empresa com o mesmo cnpj
+      let empresaDuplicada: Empresa = await this.obtemEmpresa(empresa.cnpj.trim());
+
+      if (empresaDuplicada && empresaDuplicada.id != empresa.id)
+        throw new Error(`Já existe uma empresa com o mesmo CNPJ: ${empresa.cnpj}`);
+
+      // ------------------------------------------------------------------------------------------------------
+
+      // verifica se tem outras empresas com o mesmo nome já cadastrada
+      const empresasMesmoNome: Empresa[] = await this.obtemEmpresaPorNome(empresa.razaoSocial, empresa.nomeFantasia, true) as Empresa[];
+
+      if (empresasMesmoNome.length > 0) {
+        for (const empresaItem of empresasMesmoNome) {
+
+          if ((empresaItem.razaoSocial.trim().toUpperCase().replace(" ", "") == empresa.razaoSocial.trim().toUpperCase().replace(" ", "")) && empresaItem.id != empresa.id) {
+            throw new Error(`Já existe empresa com a mesma Razão social`);
+          }
+          else if ((empresaItem.nomeFantasia.trim().toUpperCase().replace(" ", "") == empresa.nomeFantasia.trim().toUpperCase().replace(" ", "")) && empresaItem.id != empresa.id) {
+            throw new Error(`Já existe empresa com o mesmo Nome Fantasia`);
+          }
+        }
       }
 
-      // exclui o grupo empresa
-      await (new HelperGrupoEmpresa()).excluiGrupoEmpresa(grupoExistente);
+      // ------------------------------------------------------------------------------------------------------
 
-      return res.status(200).json({ mensagem: "Grupo Empresa excluído com sucesso!", quantidadeEmpresas: 0 });
+      const grupoEmpresa: GrupoEmpresa = await this.obtemGrupoEmpresa(empresa.grupoEmpresaId);
+
+      if (!grupoEmpresa)
+        throw new Error("Este grupo de empresa informado não existe!");
+
+      // ------------------------------------------------------------------------------------------------------
+
+      // Atualiza a empresa
+      if (empresa.razaoSocial.trim() != empresaExistente.razaoSocial.trim())
+        values.razaoSocial = empresa.razaoSocial.trim();
+
+      if (empresa.nomeFantasia.trim() != empresaExistente.nomeFantasia.trim())
+        values.nomeFantasia = empresa.nomeFantasia.trim();
+
+      if (limpaFormatacaoCNPJ(empresa.cnpj) != limpaFormatacaoCNPJ(empresaExistente.cnpj))
+        values.cnpj = limpaFormatacaoCNPJ(empresa.cnpj);
+
+      if (empresa.filial.trim() != empresaExistente.filial)
+        values.filial = empresa.filial.trim();
+
+      if (empresa.grupoEmpresaId != empresaExistente.grupoEmpresaId)
+        values.grupoEmpresaId = empresa.grupoEmpresaId;
+
+      await (new HelperEmpresa()).atualizarEmpresa(empresa.id, values);
+
+      // ------------------------------------------------------------------------------------------------------
+
+      return res.status(200).json({
+        mensagem: "Empresa Atualizada com sucesso!"
+       });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
-
-  public async atualizaEmpresa(req: Request, res: Response): Promise<Response> {
-
-  }
-  */
 }

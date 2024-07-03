@@ -19,8 +19,8 @@ class HelperEstado extends Controller {
       }
     });
 
-    if (linhasAfetadas[0] < 1) 
-      throw new Error("Nenhum registro foi atualizado.");    
+    if (linhasAfetadas[0] < 1)
+      throw new Error("Nenhum registro foi atualizado.");
   }
 
 }

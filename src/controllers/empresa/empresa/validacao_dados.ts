@@ -124,6 +124,14 @@ class EmpresaValidator {
   //#endregion
 }
 
+class EmpresaValidatorUpdate extends EmpresaValidator {
+  @Max(99999999, { message: "O valor máximo para o ID da empresa foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da empresa é 1" })
+  @IsInt({ message: "O ID da empresa precisa ser um número inteiro" })
+  @IsNotEmpty({message: "O Id da Empresa é obrigatorio"})
+  id: number;
+}
+
 class EmpresaValidatorFind {
   //#region Empresa
 
@@ -233,5 +241,6 @@ class EmpresaValidatorDelete {
 export {
   EmpresaValidator,
   EmpresaValidatorFind,
-  EmpresaValidatorDelete
+  EmpresaValidatorDelete,
+  EmpresaValidatorUpdate
 }

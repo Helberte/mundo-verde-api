@@ -75,7 +75,7 @@ class EmpresaController extends Controller {
       throw new Error("Para buscar uma empresa é preciso informar ou o ID ou o CNPJ da mesma.");
 
     if (cnpj)
-      where.cnpj = cnpj;
+      where.cnpj = limpaFormatacaoCNPJ(cnpj);
 
     if (id)
       where.id = id;
@@ -87,7 +87,7 @@ class EmpresaController extends Controller {
     return empresa;
   }
 
-  async obtemEmpresaPorNome(razaoSocial: string = "", nomeFantasia: string = ""): Promise<Empresa | undefined> {
+  async obtemEmpresaPorNome(razaoSocial: string = "", nomeFantasia: string = "", retornaTodas: boolean = false): Promise<Empresa | Empresa[] | undefined> {
 
     const options: FindOptions<Empresa> = { };
 
@@ -127,14 +127,18 @@ class EmpresaController extends Controller {
 
     const empresas: Empresa[] = await Empresa.findAll(options);
 
-    let empresa: Empresa = empresas.find(x => x.razaoSocial.replace(" ", "").toUpperCase() === razaoSocial.replace(" ", "").toUpperCase().trim());
+    if (!retornaTodas) {
+      let empresa: Empresa = empresas.find(x => x.razaoSocial.replace(" ", "").toUpperCase() === razaoSocial.replace(" ", "").toUpperCase().trim());
 
-    if (empresa)
-      return empresa;
+      if (empresa)
+        return empresa;
 
-    empresa = empresas.find(x => x.nomeFantasia.replace(" ", "").toUpperCase() === nomeFantasia.replace(" ", "").toUpperCase().trim());
+      empresa = empresas.find(x => x.nomeFantasia.replace(" ", "").toUpperCase() === nomeFantasia.replace(" ", "").toUpperCase().trim());
 
-    return empresa ? empresa : undefined;
+      return empresa ? empresa : undefined;
+    }
+
+    return empresas;
   }
 
   async listaEmpresas(empresa: Empresa, limit: number = 50): Promise<Empresa[]> {

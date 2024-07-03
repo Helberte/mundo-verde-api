@@ -11,8 +11,8 @@ router.get("/", async (req: Request, res: Response) => {
   await (new Empresas()).buscaEmpresas(req, res);
 });
 
-// router.delete("/grupos-empresas", async (req: Request, res: Response) => {
-//   await (new GrupoEmpresa()).excluirGrupoEmpresa(req, res);
-// });
+router.put("/", async (req: Request, res: Response) => {
+  await (new Empresas()).atualizaEmpresa(req, res);
+});
 
 export default router;
