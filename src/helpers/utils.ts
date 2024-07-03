@@ -149,6 +149,10 @@ export function validarCNPJ(cnpj: string): boolean {
 
 export function limpaFormatacaoCNPJ(cnpj: string): string {
   try {
+
+    if(!cnpj)
+      return cnpj;
+
     let cnpjLimpo: string = "";
 
     for (const caractere of cnpj) {
@@ -164,6 +168,9 @@ export function limpaFormatacaoCNPJ(cnpj: string): string {
 
 export function formataCNPJ(cnpj: string): string {
   try {
+    if(!cnpj)
+      return cnpj;
+
     let   cnpjFormatado: string = "";
     const cnpjLimpo:     string = limpaFormatacaoCNPJ(cnpj);
 

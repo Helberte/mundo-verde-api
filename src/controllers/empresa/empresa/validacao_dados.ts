@@ -127,6 +127,11 @@ class EmpresaValidator {
 class EmpresaValidatorFind {
   //#region Empresa
 
+  @IsNumberString({ no_symbols: true }, { message: "O ID da empresa é Inválido." })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  id: string;
+
   @Length(1, 150, { message: "O tamanho da Razão Social é inválido" })
   @IsString({ message: "A Razão Social precisa ser um texto" })
   @IsOptional()
@@ -139,7 +144,7 @@ class EmpresaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   nomeFantasia?: string;
 
-  @Length(1, 14, { message: "O tamanho CNPJ é inválido" })
+  @Length(1, 18, { message: "O tamanho CNPJ é inválido" })
   @IsString({ message: "O CNPJ precisa ser um texto" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
@@ -151,12 +156,10 @@ class EmpresaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   filial?: string;
 
-  @Max(99999999, { message: "O valor máximo para o ID do grupo da empresa foi excedido." })
-  @Min(1, {message: "O valor mínimo para o ID do grupo da empresa é 1" })
-  @IsInt({ message: "O ID do grupo da empresa precisa ser um número inteiro" })
-  @IsNotEmpty({ message: "O Id do Grupo de Empresas é obrigatorio" })
+  @IsNumberString({ no_symbols: true }, { message: "O ID do grupo de Empresas é Inválido." })
   @IsOptional()
-  grupoEmpresaId?: number;
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  grupoEmpresaId?: string;
 
   //#endregion
 

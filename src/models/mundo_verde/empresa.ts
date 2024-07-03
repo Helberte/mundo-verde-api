@@ -9,6 +9,7 @@ import Perfil from "./perfil";
 import Usuario from "./usuario";
 import EmpresaUsuario from "./empresa_usuario";
 import EmpresaEndereco from "./empresa_endereco";
+import { formataCNPJ } from "@helpers/utils";
 
 @Table({ tableName: "empresa", updatedAt: false })
 export default class Empresa extends SequelizeModel<Empresa> {
@@ -23,7 +24,13 @@ export default class Empresa extends SequelizeModel<Empresa> {
 
   @AllowNull(false)
   @Column
-  cnpj: string;
+  get cnpj(): string {
+    return formataCNPJ(this.getDataValue("cnpj"));
+  }
+
+  set cnpj(value: string) {
+    this.setDataValue("cnpj", value);
+  }
 
   @AllowNull(true)
   @Column

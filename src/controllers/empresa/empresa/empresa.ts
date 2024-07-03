@@ -59,20 +59,23 @@ export default class EmpresasController extends EmpresaController {
     }
   }
 
-  public async buscaEmpresa(req: Request, res: Response): Promise<Response> {
+  public async buscaEmpresas(req: Request, res: Response): Promise<Response> {
     try {
-      const grupoEmpresa: EmpresaValidatorFind = await validaParametros<EmpresaValidatorFind, any>(GrupoEmpresaValidatorFind, req.query);
+      const empresa: EmpresaValidatorFind = await validaParametros<EmpresaValidatorFind, any>(EmpresaValidatorFind, req.query);
 
       // só irá conseguir buscar as empresas que o usuário tiver acesso
-      const grupoEmpresaFind: GrupoEmpresa = new GrupoEmpresa();
+      const empresaFind: Empresa = new Empresa();
 
-      grupoEmpresaFind.nome   = grupoEmpresa.nome;
-      grupoEmpresaFind.id     = Number(grupoEmpresa.id);
-      grupoEmpresaFind.codigo = grupoEmpresa.codigo;
+      empresaFind.id             = Number(empresa.id);
+      empresaFind.razaoSocial    = empresa.razaoSocial?.trim();
+      empresaFind.nomeFantasia   = empresa.nomeFantasia?.trim();
+      empresaFind.cnpj           = empresa.cnpj;
+      empresaFind.filial         = empresa.filial?.trim();
+      empresaFind.grupoEmpresaId = Number(empresa.grupoEmpresaId);
 
-      const gruposEmpresas: GrupoEmpresa[] = await this.listaGruposEmpresas(grupoEmpresaFind);
+      const empresas: Empresa[] = await this.listaEmpresas(empresaFind);
 
-      return res.status(200).json({ gruposEmpresas });
+      return res.status(200).json({ empresas });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });

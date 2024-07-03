@@ -1,4 +1,5 @@
 import Controller from "@controllers/controller"
+import { limpaFormatacaoCNPJ } from "@helpers/utils";
 import Empresa from "@models/empresa";
 import GrupoEmpresa from "@models/grupo_empresa";
 import { FindOptions, Op } from "sequelize";
@@ -134,6 +135,48 @@ class EmpresaController extends Controller {
     empresa = empresas.find(x => x.nomeFantasia.replace(" ", "").toUpperCase() === nomeFantasia.replace(" ", "").toUpperCase().trim());
 
     return empresa ? empresa : undefined;
+  }
+
+  async listaEmpresas(empresa: Empresa, limit: number = 50): Promise<Empresa[]> {
+    let find:     any = { };
+    let findLike: any = { };
+
+    if (empresa.id)
+      find.id = empresa.id;
+
+    if (empresa.filial)
+      find.filial = empresa.filial;
+
+    if (empresa.grupoEmpresaId)
+      find.grupoEmpresaId = empresa.grupoEmpresaId;
+
+    if (empresa.razaoSocial)
+      findLike.razaoSocial = empresa.razaoSocial;
+
+    if (empresa.nomeFantasia)
+      findLike.nomeFantasia = empresa.nomeFantasia;
+
+    if (empresa.cnpj)
+      findLike.cnpj = empresa.cnpj;
+
+    return await Empresa.findAll({
+      where: {
+        ...find,
+        razaoSocial: {
+          [Op.substring]: findLike.razaoSocial ? findLike.razaoSocial : ""
+        },
+        nomeFantasia: {
+          [Op.substring]: findLike.nomeFantasia ? findLike.nomeFantasia : ""
+        },
+        cnpj: {
+          [Op.substring]: findLike.cnpj ? limpaFormatacaoCNPJ(findLike.cnpj) : ""
+        }
+      },
+      order: [
+        ["razaoSocial", "ASC"]
+      ],
+      limit
+    });
   }
 
   //#endregion
