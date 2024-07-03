@@ -1,7 +1,7 @@
 import Controller from "@controllers/controller"
 import Empresa from "@models/empresa";
 import GrupoEmpresa from "@models/grupo_empresa";
-import { Op } from "sequelize";
+import { FindOptions, Op } from "sequelize";
 
 class EmpresaController extends Controller {
 
@@ -84,6 +84,56 @@ class EmpresaController extends Controller {
     })
 
     return empresa;
+  }
+
+  async obtemEmpresaPorNome(razaoSocial: string = "", nomeFantasia: string = ""): Promise<Empresa | undefined> {
+
+    const options: FindOptions<Empresa> = { };
+
+    if (!razaoSocial && !nomeFantasia)
+      throw new Error("É preciso informar ou a Razão Social ou o Nome Fantasia para buscar empresas por nome.");
+
+    if (razaoSocial && nomeFantasia) {
+      options.where = {
+        [Op.or]: [
+          {
+            razaoSocial: {
+              [Op.substring]: razaoSocial
+            }
+          },
+          {
+            nomeFantasia: {
+              [Op.substring]: nomeFantasia
+            }
+          }
+        ]
+      }
+    }
+    else if (razaoSocial) {
+      options.where = {
+        razaoSocial: {
+          [Op.substring]: razaoSocial
+        }
+      }
+    }
+    else if (nomeFantasia) {
+      options.where = {
+        nomeFantasia: {
+          [Op.substring]: nomeFantasia
+        }
+      }
+    }
+
+    const empresas: Empresa[] = await Empresa.findAll(options);
+
+    let empresa: Empresa = empresas.find(x => x.razaoSocial.replace(" ", "").toUpperCase() === razaoSocial.replace(" ", "").toUpperCase().trim());
+
+    if (empresa)
+      return empresa;
+
+    empresa = empresas.find(x => x.nomeFantasia.replace(" ", "").toUpperCase() === nomeFantasia.replace(" ", "").toUpperCase().trim());
+
+    return empresa ? empresa : undefined;
   }
 
   //#endregion

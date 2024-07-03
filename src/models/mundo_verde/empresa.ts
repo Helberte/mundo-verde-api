@@ -1,14 +1,14 @@
 import SequelizeModel from "@core/database/sequelize_model";
-import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, HasOne, Table } from "sequelize-typescript";
 import GrupoEmpresa from "./grupo_empresa";
 import GrupoOpcoes from "./grupo_opcoes";
 import Opcoes from "./opcao";
-import Endereco from "./endereco";
 import Pessoa from "./pessoa";
 import EmpresaPessoa from "./empresa_pessoa";
 import Perfil from "./perfil";
 import Usuario from "./usuario";
 import EmpresaUsuario from "./empresa_usuario";
+import EmpresaEndereco from "./empresa_endereco";
 
 @Table({ tableName: "empresa", updatedAt: false })
 export default class Empresa extends SequelizeModel<Empresa> {
@@ -29,16 +29,9 @@ export default class Empresa extends SequelizeModel<Empresa> {
   @Column
   filial: string
 
-  @ForeignKey(() => Endereco)
-  @Column({field: "fk_endereco_id", type: DataType.NUMBER})
-  enderecoId: number
-
   @ForeignKey(() => GrupoEmpresa)
   @Column({ field: "fk_grupo_empresa_id", type: DataType.NUMBER })
   grupoEmpresaId: number;
-
-  @BelongsTo(() => Endereco)
-  endereco: Endereco;
 
   @BelongsTo(() => GrupoEmpresa)
   grupoEmpresa: GrupoEmpresa;
@@ -57,4 +50,7 @@ export default class Empresa extends SequelizeModel<Empresa> {
 
   @BelongsToMany(() => Usuario, () => EmpresaUsuario)
   usuarios: Usuario[];
+
+  @HasOne(() => EmpresaEndereco)
+  empresaEndereco: EmpresaEndereco;
 }

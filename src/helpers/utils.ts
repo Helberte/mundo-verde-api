@@ -58,16 +58,15 @@ export function deleteCamposDefault(): any {
  * os 2 verificadores servem para validar os 12 primeiros base.
  *
  * OBS: Mesmo que o número do cnpj seja válido, não significa que o mesmo está cadastrado na Receita Federal.
- * 
+ *
  * @author Helberte Costa
- * 
+ *
  * @date 02/07/2024
- * 
- * @param cnpj 
- * @returns 
+ *
+ * @param cnpj
+ * @returns
  */
 export function validarCNPJ(cnpj: string): boolean {
-
   let valorCNPJ:   string = "";
   let contador_1:  number = 0;
 
@@ -101,9 +100,14 @@ export function validarCNPJ(cnpj: string): boolean {
   if (contador_1 === 14)
     return false;
 
-  for (let i = 0; i < array_1.length; i++) {
+  /*-------------------------------------------------------------------------------------------------*/
+
+  // 1° - Multiplicação e soma
+
+  /*-------------------------------------------------------------------------------------------------*/
+
+  for (let i = 0; i < array_1.length; i++)
     soma_1 = soma_1 + (Number(valorCNPJ[i]) * array_1[i]);
-  }
 
   restoDiv_1 = soma_1 % 11;
 
@@ -115,9 +119,14 @@ export function validarCNPJ(cnpj: string): boolean {
   else
     return false;
 
-  for (let i = 0; i < array_2.length; i++) {
+  /*-------------------------------------------------------------------------------------------------*/
+
+  // 2° - Multiplicação e soma
+
+  /*-------------------------------------------------------------------------------------------------*/
+
+  for (let i = 0; i < array_2.length; i++)
     soma_2 = soma_2 + (Number(valorCNPJ[i]) * array_2[i]);
-  }
 
   restoDiv_2 = soma_2 % 11;
 
@@ -129,8 +138,58 @@ export function validarCNPJ(cnpj: string): boolean {
   else
     return false;
 
+  /*-------------------------------------------------------------------------------------------------*/
+
+  // Verifica o resultado
   if (Number(valorCNPJ[12]) === digitoVerificador_1 && Number(valorCNPJ[13]) === digitoVerificador_2)
     return true;
   else
     return false;
+}
+
+export function limpaFormatacaoCNPJ(cnpj: string): string {
+  try {
+    let cnpjLimpo: string = "";
+
+    for (const caractere of cnpj) {
+      if (isInt(caractere))
+        cnpjLimpo = cnpjLimpo + caractere;
+    }
+
+    return cnpjLimpo;
+  } catch (error) {
+    return "N/A";
+  }
+}
+
+export function formataCNPJ(cnpj: string): string {
+  try {
+    let   cnpjFormatado: string = "";
+    const cnpjLimpo:     string = limpaFormatacaoCNPJ(cnpj);
+
+    for (let i = 0; i < cnpjLimpo.length; i++) {
+
+      cnpjFormatado = cnpjFormatado + cnpjLimpo[i];
+
+      if (i == 1)
+        cnpjFormatado = cnpjFormatado + ".";
+
+      if (i == 4)
+        cnpjFormatado = cnpjFormatado + ".";
+
+      if (i == 7)
+        cnpjFormatado = cnpjFormatado + "/";
+
+      if (i == 11)
+        cnpjFormatado = cnpjFormatado + "-";
+
+      if (cnpjFormatado.length === 18)
+        break;
+    }
+
+    return cnpjFormatado;
+
+  } catch (error) {
+    return "N/A";
+  }
 }
