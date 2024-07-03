@@ -154,4 +154,20 @@ export default class EmpresasController extends EmpresaController {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
+
+  public async adicionaEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
+    try {
+
+      // verificar se a empresa existe
+
+      // verificar se a empresa possui endereco
+
+      // se possuir endereço, e não tiver liberado, retornar que precisa de liberação para atualizar o endereço existente
+
+      // se não possuir endereço => inserir novo endereço e vincula-lo a empresa, caso exista, apenas atualizar
+
+    } catch (error) {
+      return res.status(500).json({ erro: (error as Error).message });
+    }
+  }
 }
