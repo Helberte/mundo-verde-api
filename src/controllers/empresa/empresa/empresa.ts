@@ -2,9 +2,10 @@ import { validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
 import { EmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
-import GrupoEmpresa from "@models/grupo_empresa";
-import HelperGrupoEmpresa from "@helpers/grupoEmpresa";
 import Empresa from "@models/empresa";
+// import GrupoEmpresa from "@models/grupo_empresa";
+// import HelperGrupoEmpresa from "@helpers/grupoEmpresa";
+// import Empresa from "@models/empresa";
 
 export default class EmpresasController extends EmpresaController {
 
@@ -19,26 +20,25 @@ export default class EmpresasController extends EmpresaController {
       if (empresaExistente)
         throw new Error(`Já existe uma empresa com o mesmo CNPJ: ${empresa.cnpj}`);
 
-      // insere o grupo
-      const novoGrupo: GrupoEmpresa = new GrupoEmpresa();
+      // // insere o grupo
+      // const novoGrupo: GrupoEmpresa = new GrupoEmpresa();
 
-      novoGrupo.nome      = grupoEmpresa.nome;
-      novoGrupo.codigo    = grupoEmpresa.codigo;
+      // novoGrupo.nome      = grupoEmpresa.nome;
+      // novoGrupo.codigo    = grupoEmpresa.codigo;
 
-      const retorno: GrupoEmpresa = await (new HelperGrupoEmpresa()).insereGrupoEmpresa(novoGrupo);
+      // const retorno: GrupoEmpresa = await (new HelperGrupoEmpresa()).insereGrupoEmpresa(novoGrupo);
 
-      // ------------------------------------------------------------------------------------------------------
+      // // ------------------------------------------------------------------------------------------------------
 
       return res.status(200).json({
-        mensagem: "Grupo Empresa inserido com sucesso!",
-        grupoEmpresa: retorno
+        mensagem: "CNPJ aprovado!"
        });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
-
+  /*
   public async buscaEmpresa(req: Request, res: Response): Promise<Response> {
     try {
       const grupoEmpresa: GrupoEmpresaValidatorFind = await validaParametros<GrupoEmpresaValidatorFind, any>(GrupoEmpresaValidatorFind, req.query);
@@ -92,4 +92,5 @@ export default class EmpresasController extends EmpresaController {
   public async atualizaEmpresa(req: Request, res: Response): Promise<Response> {
 
   }
+  */
 }

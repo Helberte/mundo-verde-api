@@ -49,9 +49,26 @@ export function deleteCamposDefault(): any {
   }
 }
 
-export function validarCNPJ(cnpj: string): Boolean {
+/**
+ * Fonte:
+ * https://blog.dbins.com.br/como-funciona-a-logica-da-validacao-do-cnpj
+ * https://www.macoratti.net/alg_cnpj.htm
+ *
+ * O cnpj é formado por 14 números sendo 12 numeros base e 2 digitos verificadores
+ * os 2 verificadores servem para validar os 12 primeiros base.
+ *
+ * OBS: Mesmo que o número do cnpj seja válido, não significa que o mesmo está cadastrado na Receita Federal.
+ * 
+ * @author Helberte Costa
+ * 
+ * @date 02/07/2024
+ * 
+ * @param cnpj 
+ * @returns 
+ */
+export function validarCNPJ(cnpj: string): boolean {
 
-  let valor:       string = "";
+  let valorCNPJ:   string = "";
   let contador_1:  number = 0;
 
   let soma_1:      number = 0;
@@ -65,43 +82,27 @@ export function validarCNPJ(cnpj: string): Boolean {
   const array_1:   number[] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
   const array_2:   number[] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-  /*
-
-  fonte:
-  https://blog.dbins.com.br/como-funciona-a-logica-da-validacao-do-cnpj
-  https://www.macoratti.net/alg_cnpj.htm
-
-  O cnpj é formado por 14 numeros
-  12 numeros base e
-  2 digitos verificadores
-
-  os 2 verificadores servem para validar os 12 primeiros base.
-
-  OBS: Mesmo que o número do cnpj seja válido, não significa que o mesmo está cadastrado na Receita Federal.
-  */
-
   // desconsidera tudo que não é número inteiro
   for (const caractere of cnpj) {
     if (isInt(caractere))
-      valor += caractere;
+      valorCNPJ += caractere;
   }
 
   // desconsidera fora do tamanho correto
-  if (valor.length != 14)
+  if (valorCNPJ.length != 14)
     return false;
 
   // compara o 1° valor com o restante e se forem todos iguais, desconsidera o cnpj
-  for (let i = 0; i < valor.length; i++) {
-    if (valor[0] === valor[i])
+  for (let i = 0; i < valorCNPJ.length; i++) {
+    if (valorCNPJ[0] === valorCNPJ[i])
       contador_1 = contador_1 + 1;
   }
 
   if (contador_1 === 14)
     return false;
 
-
   for (let i = 0; i < array_1.length; i++) {
-    soma_1 = soma_1 + (Number(valor[i]) * array_1[i]);
+    soma_1 = soma_1 + (Number(valorCNPJ[i]) * array_1[i]);
   }
 
   restoDiv_1 = soma_1 % 11;
@@ -115,7 +116,7 @@ export function validarCNPJ(cnpj: string): Boolean {
     return false;
 
   for (let i = 0; i < array_2.length; i++) {
-    soma_2 = soma_2 + (Number(valor[i]) * array_2[i]);
+    soma_2 = soma_2 + (Number(valorCNPJ[i]) * array_2[i]);
   }
 
   restoDiv_2 = soma_2 % 11;
@@ -128,7 +129,7 @@ export function validarCNPJ(cnpj: string): Boolean {
   else
     return false;
 
-  if (Number(valor[12]) === digitoVerificador_1 && Number(valor[13]) === digitoVerificador_2)
+  if (Number(valorCNPJ[12]) === digitoVerificador_1 && Number(valorCNPJ[13]) === digitoVerificador_2)
     return true;
   else
     return false;

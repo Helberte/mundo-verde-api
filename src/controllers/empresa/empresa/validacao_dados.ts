@@ -1,7 +1,33 @@
+import { validarCNPJ } from "@helpers/utils";
 import { Transform, TransformFnParams } from "class-transformer";
-import { IsNotEmpty, IsNumberString, IsOptional, IsString, Length } from "class-validator";
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Length,
+  Max,
+  Min,
+  Validate,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface
+}
+  from "class-validator";
 import sanitizeHtml from "sanitize-html";
-import { IsInt, Max, Min } from "sequelize-typescript";
+
+@ValidatorConstraint({ name: "validaCnpj", async: false })
+class validadorCNPJ implements ValidatorConstraintInterface {
+
+  validate(value: string, _validationArguments?: ValidationArguments): boolean | Promise<boolean> {
+    return validarCNPJ(value);
+  }
+
+  defaultMessage(_validationArguments?: ValidationArguments): string {
+    return 'CNPJ ($value) é inválido!';
+  }
+}
 
 class EmpresaValidator {
   //#region Empresa
@@ -18,7 +44,8 @@ class EmpresaValidator {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   nomeFantasia: string;
 
-  @Length(14, 14, { message: "O tamanho CNPJ é inválido" })
+  @Validate(validadorCNPJ)
+  @Length(14, 18, { message: "O tamanho CNPJ é inválido" })
   @IsNotEmpty({ message: "O CNPJ está vazio" })
   @IsString({ message: "O CNPJ precisa ser um texto" })
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
@@ -30,10 +57,10 @@ class EmpresaValidator {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   filial: string;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Grupo de Empresas é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do grupo da empresa foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do grupo da empresa é 1" })
+  @IsInt({ message: "O ID do grupo da empresa precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do Grupo de Empresas é obrigatorio" })
   grupoEmpresaId: number;
 
   //#endregion
@@ -69,29 +96,29 @@ class EmpresaValidator {
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   complemento: string;
-
-  @IsInt
-  @IsNotEmpty({message: "O Id do Tipo é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+ 
+  @Max(99999999, { message: "O valor máximo para o ID do tipo do endereço foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do tipo do endereço é 1" })
+  @IsInt({ message: "O ID do tipo do endereço precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do tipo do endereço é obrigatorio" })
   opcoesTipoId: number;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Bairro é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do bairro foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do bairro é 1" })
+  @IsInt({ message: "O ID do bairro precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do bairro é obrigatorio" })
   bairroId: number;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id da Cidade é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID da cidade foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da cidade é 1" })
+  @IsInt({ message: "O ID da cidade precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id da cidade é obrigatorio" })
   cidadeId: number;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Estado é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do estado foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do estado é 1" })
+  @IsInt({ message: "O ID do estado precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do estado é obrigatorio" })
   estadoId: number;
 
   //#endregion
@@ -124,10 +151,10 @@ class EmpresaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   filial: string;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Grupo de Empresas é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do grupo da empresa foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do grupo da empresa é 1" })
+  @IsInt({ message: "O ID do grupo da empresa precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do Grupo de Empresas é obrigatorio" })
   @IsOptional()
   grupoEmpresaId: number;
 
@@ -165,31 +192,27 @@ class EmpresaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   complemento: string;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Tipo do Endereço é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do tipo do endereço foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do tipo do endereço é 1" })
+  @IsInt({ message: "O ID do tipo do endereço precisa ser um número inteiro" })
   @IsOptional()
   opcoesTipoId: number;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Bairro é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do bairro foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do bairro é 1" })
+  @IsInt({ message: "O ID do bairro precisa ser um número inteiro" })
   @IsOptional()
   bairroId: number;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id da Cidade é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID da cidade foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da cidade é 1" })
+  @IsInt({ message: "O ID da cidade precisa ser um número inteiro" })
   @IsOptional()
   cidadeId: number;
 
-  @IsInt
-  @IsNotEmpty({message: "O Id do Estado é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
+  @Max(99999999, { message: "O valor máximo para o ID do estado foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do estado é 1" })
+  @IsInt({ message: "O ID do estado precisa ser um número inteiro" })
   @IsOptional()
   estadoId: number;
 
@@ -197,10 +220,10 @@ class EmpresaValidatorFind {
 }
 
 class EmpresaValidatorDelete {
-  @IsInt
+  @Max(99999999, { message: "O valor máximo para o ID da empresa foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da empresa é 1" })
+  @IsInt({ message: "O ID da empresa precisa ser um número inteiro" })
   @IsNotEmpty({message: "O Id da Empresa é obrigatorio"})
-  @Min(0)
-  @Max(99999999)
   id: number;
 }
 

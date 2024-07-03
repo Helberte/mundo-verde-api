@@ -4,6 +4,7 @@ import estado from "@controllers/endereco/estado/routers";
 import cidade from "@controllers/endereco/cidade/routers";
 import bairro from "@controllers/endereco/bairro/routers";
 import grupoEmpresa from "@controllers/empresa/grupo_empresa/routers";
+import empresas from "@controllers/empresa/empresa/routers";
 
 const router = Router();
 
@@ -19,7 +20,8 @@ router.use("/endereco", bairro);
 
 //#region Empresas
 
-router.use("/empresa", grupoEmpresa);
+router.use("/empresas", grupoEmpresa);
+router.use("/empresas", empresas);
 
 //#endregion
 
