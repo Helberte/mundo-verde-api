@@ -6,6 +6,7 @@ import Empresa from "@models/empresa";
 import HelperEmpresa from "@helpers/empresa";
 import GrupoEmpresa from "@models/grupo_empresa";
 import Endereco from "@models/endereco";
+import HelperOpcoes, { EnumGruposOpcoes } from "@helpers/opcoes";
 
 export default class EmpresasController extends EmpresaController {
 
@@ -192,6 +193,14 @@ export default class EmpresasController extends EmpresaController {
           "<br>Deseja Continuar?");
 
       // opcoes
+      // ------------------------------------------------------------------------------------------------------
+
+      const tipoEndereco: string = await new HelperOpcoes().obtemOpcao(EnumGruposOpcoes.TiposEndereco, dados.opcoesTipoId);
+
+      if (!tipoEndereco)
+        throw new Error("O Tipo do endereço informado não existe!");
+
+      // ------------------------------------------------------------------------------------------------------
 
       // estado
 
