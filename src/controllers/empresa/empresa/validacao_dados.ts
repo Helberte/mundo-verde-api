@@ -30,8 +30,6 @@ class validadorCNPJ implements ValidatorConstraintInterface {
 }
 
 class EmpresaValidator {
-  //#region Empresa
-
   @Length(5, 150, { message: "O tamanho da Razão Social é inválido" })
   @IsNotEmpty({ message: "A Razão Social está vazia" })
   @IsString({ message: "A Razão Social precisa ser um texto" })
@@ -62,66 +60,6 @@ class EmpresaValidator {
   @IsInt({ message: "O ID do grupo da empresa precisa ser um número inteiro" })
   @IsNotEmpty({ message: "O Id do Grupo de Empresas é obrigatorio" })
   grupoEmpresaId: number;
-
-  //#endregion
-
-  //#region Endereço
-/*
-  @Length(5, 100, { message: "O tamanho do nome da rua é inválido" })
-  @IsString({ message: "O nome da rua precisa ser um texto" })
-  @IsNotEmpty({ message: "O nome da rua é obrigatorio" })
-  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
-  rua: string;
-
-  @Length(1, 15, { message: "O tamanho número é inválido" })
-  @IsNumberString({ no_symbols: true }, { message: "O número só pode conter números" })
-  @IsOptional()
-  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
-  numero?: string;
-
-  @Length(8, 10, { message: "O tamanho CEP é inválido" })
-  @IsNumberString({ no_symbols: true }, { message: "O CEP só pode conter números" })
-  @IsOptional()
-  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
-  cep?: string;
-
-  @Length(5, 300, { message: "O tamanho da observação é inválido" })
-  @IsString({ message: "A Observacao precisa ser um texto" })
-  @IsOptional()
-  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
-  observacao?: string;
-
-  @Length(5, 300, { message: "O tamanho do complemento é inválido" })
-  @IsString({ message: "O complemento precisa ser um texto" })
-  @IsOptional()
-  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
-  complemento?: string;
-
-  @Max(99999999, { message: "O valor máximo para o ID do tipo do endereço foi excedido." })
-  @Min(1, {message: "O valor mínimo para o ID do tipo do endereço é 1" })
-  @IsInt({ message: "O ID do tipo do endereço precisa ser um número inteiro" })
-  @IsNotEmpty({ message: "O Id do tipo do endereço é obrigatorio" })
-  opcoesTipoId: number;
-
-  @Max(99999999, { message: "O valor máximo para o ID do bairro foi excedido." })
-  @Min(1, {message: "O valor mínimo para o ID do bairro é 1" })
-  @IsInt({ message: "O ID do bairro precisa ser um número inteiro" })
-  @IsNotEmpty({ message: "O Id do bairro é obrigatorio" })
-  bairroId: number;
-
-  @Max(99999999, { message: "O valor máximo para o ID da cidade foi excedido." })
-  @Min(1, {message: "O valor mínimo para o ID da cidade é 1" })
-  @IsInt({ message: "O ID da cidade precisa ser um número inteiro" })
-  @IsNotEmpty({ message: "O Id da cidade é obrigatorio" })
-  cidadeId: number;
-
-  @Max(99999999, { message: "O valor máximo para o ID do estado foi excedido." })
-  @Min(1, {message: "O valor mínimo para o ID do estado é 1" })
-  @IsInt({ message: "O ID do estado precisa ser um número inteiro" })
-  @IsNotEmpty({ message: "O Id do estado é obrigatorio" })
-  estadoId: number;
-*/
-  //#endregion
 }
 
 class EmpresaValidatorUpdate extends EmpresaValidator {
@@ -238,9 +176,76 @@ class EmpresaValidatorDelete {
   id: number;
 }
 
+class EnderecoEmpresaValidator {
+  //#region Endereço
+
+  @Length(1, 100, { message: "O tamanho do nome da rua é inválido" })
+  @IsString({ message: "O nome da rua precisa ser um texto" })
+  @IsNotEmpty({ message: "O nome da rua é obrigatorio" })
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  rua: string;
+
+  @Length(1, 15, { message: "O tamanho do número é inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O número só pode conter números" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  numero?: string;
+
+  @Length(8, 8, { message: "O tamanho CEP é inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O CEP só pode conter números" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  cep?: string;
+
+  @Length(5, 300, { message: "O tamanho da observação é inválido" })
+  @IsString({ message: "A Observacao precisa ser um texto" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  observacao?: string;
+
+  @Length(5, 300, { message: "O tamanho do complemento é inválido" })
+  @IsString({ message: "O complemento precisa ser um texto" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  complemento?: string;
+
+  @Max(99999999, { message: "O valor máximo para o ID da Empresa foi excedido." })
+  @Min(1, { message: "O valor mínimo para o ID da empresa é 1" })
+  @IsInt({ message: "O ID da empresa precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id da empresa é obrigatorio" })
+  empresaId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID do tipo do endereço foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do tipo do endereço é 1" })
+  @IsInt({ message: "O ID do tipo do endereço precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do tipo do endereço é obrigatorio" })
+  opcoesTipoId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID do bairro foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do bairro é 1" })
+  @IsInt({ message: "O ID do bairro precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do bairro é obrigatorio" })
+  bairroId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID da cidade foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da cidade é 1" })
+  @IsInt({ message: "O ID da cidade precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id da cidade é obrigatorio" })
+  cidadeId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID do estado foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do estado é 1" })
+  @IsInt({ message: "O ID do estado precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do estado é obrigatorio" })
+  estadoId: number;
+
+  //#endregion
+}
+
 export {
   EmpresaValidator,
   EmpresaValidatorFind,
   EmpresaValidatorDelete,
-  EmpresaValidatorUpdate
+  EmpresaValidatorUpdate,
+  EnderecoEmpresaValidator
 }
