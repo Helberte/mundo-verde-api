@@ -7,6 +7,10 @@ router.post("/", async (req: Request, res: Response) => {
   await (new Empresas()).criarEmpresa(req, res);
 });
 
+router.post("/endereco", async (req: Request, res: Response) => {
+  await (new Empresas()).adicionaEnderecoEmpresa(req, res);
+});
+
 router.get("/", async (req: Request, res: Response) => {
   await (new Empresas()).buscaEmpresas(req, res);
 });

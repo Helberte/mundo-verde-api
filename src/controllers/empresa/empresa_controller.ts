@@ -1,6 +1,8 @@
 import Controller from "@controllers/controller"
 import { limpaFormatacaoCNPJ } from "@helpers/utils";
 import Empresa from "@models/empresa";
+import EmpresaEndereco from "@models/empresa_endereco";
+import Endereco from "@models/endereco";
 import GrupoEmpresa from "@models/grupo_empresa";
 import { FindOptions, Op } from "sequelize";
 
@@ -183,6 +185,29 @@ class EmpresaController extends Controller {
     });
   }
 
+  async buscaEnderecoEmpresa(empresaId: number): Promise<Endereco> {
+    const empresaEndereco: EmpresaEndereco = await EmpresaEndereco.findOne(
+      {
+        attributes: ["id"],
+        include: [
+          {
+            model: Endereco,
+            required: true
+          },
+          {
+            model: Empresa,
+            required: true,
+            attributes: ["id", "cnpj", "filial"],
+            where: {
+              id: empresaId
+            }
+          }
+        ]
+      }
+    );
+
+    return empresaEndereco?.endereco;
+  }
   //#endregion
 }
 

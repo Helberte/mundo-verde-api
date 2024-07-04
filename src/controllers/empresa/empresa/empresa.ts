@@ -1,10 +1,11 @@
 import { limpaFormatacaoCNPJ, validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
-import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorUpdate } from "./validacao_dados";
+import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorUpdate, EnderecoEmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
 import Empresa from "@models/empresa";
 import HelperEmpresa from "@helpers/empresa";
 import GrupoEmpresa from "@models/grupo_empresa";
+import Endereco from "@models/endereco";
 
 export default class EmpresasController extends EmpresaController {
 
@@ -157,14 +158,52 @@ export default class EmpresasController extends EmpresaController {
 
   public async adicionaEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
     try {
+      const dados: EnderecoEmpresaValidator = await validaParametros<EnderecoEmpresaValidator, any>(EnderecoEmpresaValidator, req.body);
+
+      // só será permitido adicionar endereço a empresa que o usuário estiver logado ou se, a empresa
+      // que está tentando atualizar o endereço ou adicionar endereço for diferente da empresa cujo usuário estiver
+      // logado, só será pertitido isso, caso o usuário tenha acesso a esta empresa
+      /*
+        resumo:
+
+        if (empresa == empresa usuário logado?)
+          atualiza ou insere de boa o endereço
+        else
+        {
+          if (verifica se o usuário tem acesso àquela empresa)
+            atualiza ou insere de boa o endereço
+          else
+            sai fora!
+        }
+      */
 
       // verificar se a empresa existe
+      let empresaExistente: Empresa = await this.obtemEmpresa(undefined, dados.empresaId);
+
+      if (!empresaExistente)
+        throw new Error(`A empresa informada, não existe cadastrada. ID: ${dados.empresaId}`);
 
       // verificar se a empresa possui endereco
+      const enderecoEmpresa: Endereco = await this.buscaEnderecoEmpresa(dados.empresaId);
 
       // se possuir endereço, e não tiver liberado, retornar que precisa de liberação para atualizar o endereço existente
+      if (!dados.liberacao && enderecoEmpresa)
+        throw new Error("Esta empresa já possui endereço, para atualizar será necessário uma liberação. <br>" +
+          "<br>Deseja Continuar?");
+
+      // opcoes
+
+      // estado
+
+      // cidade
+
+      // bairro
 
       // se não possuir endereço => inserir novo endereço e vincula-lo a empresa, caso exista, apenas atualizar
+
+      return res.status(200).json({
+        mensagem: "Endereço atualizado com sucesso!"
+      });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });

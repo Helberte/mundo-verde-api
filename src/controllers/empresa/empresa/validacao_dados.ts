@@ -1,6 +1,7 @@
 import { limpaFormatacaoCNPJ, validarCNPJ } from "@helpers/utils";
 import { Transform, TransformFnParams } from "class-transformer";
 import {
+  IsBoolean,
   IsInt,
   IsNotEmpty,
   IsNumberString,
@@ -208,6 +209,10 @@ class EnderecoEmpresaValidator {
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   complemento?: string;
+
+  @IsBoolean({ message: "A liberação precisa ser booleana, true ou false" })
+  @IsOptional()
+  liberacao: boolean;
 
   @Max(99999999, { message: "O valor máximo para o ID da Empresa foi excedido." })
   @Min(1, { message: "O valor mínimo para o ID da empresa é 1" })
