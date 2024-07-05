@@ -4,7 +4,8 @@ import Empresa from "@models/empresa";
 import EmpresaEndereco from "@models/empresa_endereco";
 import Endereco from "@models/endereco";
 import GrupoEmpresa from "@models/grupo_empresa";
-import { FindOptions, Op } from "sequelize";
+import moment from "moment";
+import { FindOptions, Op, Transaction } from "sequelize";
 
 class EmpresaController extends Controller {
 
@@ -185,29 +186,109 @@ class EmpresaController extends Controller {
     });
   }
 
-  async buscaEnderecoEmpresa(empresaId: number): Promise<Endereco> {
-    const empresaEndereco: EmpresaEndereco = await EmpresaEndereco.findOne(
-      {
-        attributes: ["id"],
-        include: [
-          {
-            model: Endereco,
-            required: true
-          },
-          {
-            model: Empresa,
-            required: true,
-            attributes: ["id", "cnpj", "filial"],
-            where: {
-              id: empresaId
-            }
-          }
-        ]
-      }
-    );
+  async buscaEnderecoEmpresa(empresaId: number, enderecoCompleto: boolean = false): Promise<Endereco | EmpresaEndereco> {
+    let empresaEndereco: EmpresaEndereco;
+    let endereco:        Endereco;
 
-    return empresaEndereco?.endereco;
+    if (!enderecoCompleto) {
+      endereco = (await EmpresaEndereco.findOne(
+        {
+          attributes: ["id"],
+          include: [
+            {
+              model: Endereco,
+              required: true
+            },
+            {
+              model: Empresa,
+              required: true,
+              attributes: ["id", "cnpj", "filial"],
+              where: {
+                id: empresaId
+              }
+            }
+          ]
+        }
+      )).endereco;
+
+    } else {
+      empresaEndereco = await EmpresaEndereco.findOne(
+        {
+          include: [
+            {
+              model: Endereco,
+              required: true
+            },
+            {
+              model: Empresa,
+              required: true,
+              where: {
+                id: empresaId
+              }
+            }
+          ]
+        }
+      );
+    }
+
+    return endereco ? endereco : empresaEndereco;
   }
+
+  async insereEnderecoEmpresa(endereco: Endereco, empresaId: number, transaction: Transaction): Promise<Endereco> {
+
+    const enderecoInserido: Endereco = await endereco.save({ transaction });
+
+    const empresaEndereco: EmpresaEndereco = new EmpresaEndereco();
+
+    empresaEndereco.empresaId  = empresaId;
+    empresaEndereco.enderecoId = enderecoInserido.id;
+
+    await empresaEndereco.save({ transaction });
+
+    return enderecoInserido;
+  }
+
+  async atualizaEnderecoEmpresa(enderecoAntigo: Endereco, enderecoNovo: Endereco, transaction: Transaction): Promise<Endereco | undefined> {
+    const update: any = { };
+
+    if (enderecoAntigo.rua != enderecoNovo.rua)
+      update.rua = enderecoNovo.rua;
+
+    if (enderecoAntigo.numero != enderecoNovo.numero)
+      update.numero = enderecoNovo.numero;
+
+    if (enderecoAntigo.opcoesTipoId != enderecoNovo.opcoesTipoId)
+      update.opcoesTipoId = enderecoNovo.opcoesTipoId;
+
+    if (enderecoAntigo.observacao != enderecoNovo.observacao)
+      update.observacao = enderecoNovo.observacao;
+
+    if (enderecoAntigo.complemento != enderecoNovo.complemento)
+      update.complemento = enderecoNovo.complemento;
+
+    if (enderecoAntigo.cep != enderecoNovo.cep)
+      update.cep = enderecoNovo.cep;
+
+    if (enderecoAntigo.estadoId != enderecoNovo.estadoId)
+      update.estadoId = enderecoNovo.estadoId;
+
+    if (enderecoAntigo.cidadeId != enderecoNovo.cidadeId)
+      update.cidadeId = enderecoNovo.cidadeId;
+
+    if (enderecoAntigo.bairroId != enderecoNovo.bairroId)
+      update.bairroId = enderecoNovo.bairroId;
+
+    if (Object.keys(update).length > 0) {
+      update.updatedAt = moment()
+
+      const enderecoAtualizado: Endereco = await enderecoAntigo.update({ ...update }, undefined, { transaction });
+
+      return enderecoAtualizado;
+    }
+
+    return undefined
+  }
+
   //#endregion
 }
 

@@ -1,4 +1,4 @@
-import { limpaFormatacaoCNPJ, validaParametros } from "@helpers/utils";
+import { limpaFormatacaoCEP, limpaFormatacaoCNPJ, validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
 import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorUpdate, EnderecoEmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
@@ -7,6 +7,14 @@ import HelperEmpresa from "@helpers/empresa";
 import GrupoEmpresa from "@models/grupo_empresa";
 import Endereco from "@models/endereco";
 import HelperOpcoes, { EnumGruposOpcoes } from "@helpers/opcoes";
+import Estado from "@models/estado";
+import HelperEstado from "@helpers/estado";
+import Cidade from "@models/cidade";
+import HelperCidade from "@helpers/cidade";
+import Bairro from "@models/bairro";
+import HelperBairro from "@helpers/bairro";
+// import { Transaction } from "sequelize";
+import EmpresaEndereco from "@models/empresa_endereco";
 
 export default class EmpresasController extends EmpresaController {
 
@@ -160,8 +168,9 @@ export default class EmpresasController extends EmpresaController {
   public async adicionaEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
     try {
       const dados: EnderecoEmpresaValidator = await validaParametros<EnderecoEmpresaValidator, any>(EnderecoEmpresaValidator, req.body);
+      let enderecoRetornar: EmpresaEndereco;
 
-      // só será permitido adicionar endereço a empresa que o usuário estiver logado ou se, a empresa
+      // Só será permitido adicionar endereço a empresa que o usuário estiver logado ou se, a empresa
       // que está tentando atualizar o endereço ou adicionar endereço for diferente da empresa cujo usuário estiver
       // logado, só será pertitido isso, caso o usuário tenha acesso a esta empresa
       /*
@@ -185,7 +194,7 @@ export default class EmpresasController extends EmpresaController {
         throw new Error(`A empresa informada, não existe cadastrada. ID: ${dados.empresaId}`);
 
       // verificar se a empresa possui endereco
-      const enderecoEmpresa: Endereco = await this.buscaEnderecoEmpresa(dados.empresaId);
+      const enderecoEmpresa: Endereco = await this.buscaEnderecoEmpresa(dados.empresaId) as Endereco;
 
       // se possuir endereço, e não tiver liberado, retornar que precisa de liberação para atualizar o endereço existente
       if (!dados.liberacao && enderecoEmpresa)
@@ -198,20 +207,90 @@ export default class EmpresasController extends EmpresaController {
       const tipoEndereco: string = await new HelperOpcoes().obtemOpcao(EnumGruposOpcoes.TiposEndereco, dados.opcoesTipoId);
 
       if (!tipoEndereco)
-        throw new Error("O Tipo do endereço informado não existe!");
-
-      // ------------------------------------------------------------------------------------------------------
+        throw new Error("O Tipo do endereço informado está cadastrado!");
 
       // estado
+      // ------------------------------------------------------------------------------------------------------
+
+      const estado: Estado = await new HelperEstado().obtemEstado(undefined, dados.estadoId);
+
+      if (!estado)
+        throw new Error("O Estado informado não está cadastrado!");
 
       // cidade
+      // ------------------------------------------------------------------------------------------------------
+
+      const cidade: Cidade = await new HelperCidade().obtemCidade(undefined, dados.cidadeId);
+
+      if (!cidade)
+        throw new Error("A Cidade informada não está cadastrada!");
 
       // bairro
+      // ------------------------------------------------------------------------------------------------------
+
+      const bairro: Bairro = await new HelperBairro().obtemBairro(dados.bairroId, undefined, cidade.id);
+
+      if (!bairro)
+        throw new Error("O Bairro informado não existe cadastrado ou não pertence a esta cidade!");
 
       // se não possuir endereço => inserir novo endereço e vincula-lo a empresa, caso exista, apenas atualizar
 
+      const endereco: Endereco = new Endereco();
+
+      endereco.rua          = dados.rua.trim();
+      endereco.numero       = dados.numero?.trim();
+      endereco.observacao   = dados.observacao?.trim();
+      endereco.complemento  = dados.complemento?.trim();
+      endereco.cep          = limpaFormatacaoCEP(dados.cep);
+      endereco.opcoesTipoId = dados.opcoesTipoId;
+      endereco.bairroId     = dados.bairroId;
+      endereco.cidadeId     = dados.cidadeId;
+      endereco.estadoId     = dados.estadoId;
+
+      // ------------------------------------------------------------------------------------------------------
+
+      console.log("\n------------------------------------------------------------------------------------------------------\n");
+
+      // criar função que monta um objeto com as propriedades alteradas em dois objetos passados por parametro
+
+      if (enderecoEmpresa) {
+        const endAntigo:   [string, any][]    = Object.entries(enderecoEmpresa.dataValues);
+        // const chaveAntigo: string[] = Object.keys(enderecoEmpresa.dataValues);
+        const endNovo:     [string, any][]    = Object.entries(endereco.dataValues);
+        // const chaveNovo:   string[] = Object.keys(endereco.dataValues);
+
+        for (var [keyAntigo, valorAntigo] of endAntigo) {
+
+          for (var [keyNovo, valorNovo] of endNovo) {
+
+            if (keyAntigo == "id") break;
+
+            if ((keyAntigo == keyNovo) && valorAntigo != valorNovo) {
+              console.log("chave: " + keyNovo + ", valor: " + valorNovo);
+              break;
+            }
+
+            if (keyAntigo == keyNovo) break;
+          }
+        }
+      }
+
+      console.log("\n------------------------------------------------------------------------------------------------------\n");
+
+      // ------------------------------------------------------------------------------------------------------
+/*
+      await this.db().transaction(async (transaction: Transaction)=> {
+        if (!enderecoEmpresa)
+          await this.insereEnderecoEmpresa(endereco, dados.empresaId, transaction);
+        else
+          await this.atualizaEnderecoEmpresa(enderecoEmpresa, endereco, transaction);
+      });
+*/
+      enderecoRetornar = await this.buscaEnderecoEmpresa(dados.empresaId, true) as EmpresaEndereco;
+
       return res.status(200).json({
-        mensagem: "Endereço atualizado com sucesso!"
+        mensagem: `Endereço ${enderecoEmpresa ? "atualizado" : "inserido" } com sucesso!`,
+        empresaEndereco: { ...enderecoRetornar.dataValues }
       });
 
     } catch (error) {

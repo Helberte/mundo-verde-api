@@ -27,7 +27,7 @@ export default class EstadoController extends EnderecoController {
 
       // ------------------------------------------------------------------------------------------------------
 
-      const estadoExistente: Estado = await this.obtemEstado(estado.ibgeId);
+      const estadoExistente: Estado = await new HelperEstado().obtemEstado(estado.ibgeId);
 
       if (estadoExistente)
         throw new Error(`O estado ${estado.nome} IBGEID: ${estado.ibgeId} Já existe cadastrado.`);
@@ -77,7 +77,7 @@ export default class EstadoController extends EnderecoController {
 
       //---------------------------------------------------------------------------------------------------------------------------
 
-      const estadoExistente: Estado = await this.obtemEstado(estado.ibgeId, estado.id);
+      const estadoExistente: Estado = await new HelperEstado().obtemEstado(estado.ibgeId, estado.id);
 
       if (!estadoExistente)
         throw new Error(`O estado ${estado.nome} IBGEID: ${estado.ibgeId} ID: ${estado.id} não existe cadastrado.`);

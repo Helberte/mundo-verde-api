@@ -200,3 +200,42 @@ export function formataCNPJ(cnpj: string): string {
     return "N/A";
   }
 }
+
+export function formataCEP(cep: string): string {
+  try {
+    let cepLimpo:     string = limpaFormatacaoCEP(cep);
+    let cepFormatado: string = "";
+
+    if (cepLimpo.length !== 8)
+      return undefined;
+
+    for (let i = 0; i < cepLimpo.length; i++) {
+      cepFormatado = cepFormatado + cepLimpo[i];
+      if (i === 4)
+        cepFormatado = cepFormatado + "-";
+    }
+
+    return cepFormatado;
+
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export function limpaFormatacaoCEP(cep: string): string {
+  try {
+    let cepLimpo: string = "";
+
+    for (const caractere of cep) {
+      if(isInt(caractere))
+        cepLimpo = cepLimpo + caractere;
+    }
+
+    if (cep.length === 8)
+      return cepLimpo;
+
+    return undefined;
+  } catch (error) {
+    return undefined;
+  }
+}

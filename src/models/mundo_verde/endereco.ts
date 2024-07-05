@@ -25,6 +25,10 @@ export default class Endereco extends SequelizeModel<Endereco> {
   @Column
   complemento: string;
 
+  @AllowNull(true)
+  @Column
+  cep: string;
+
   @ForeignKey(() => Opcoes)
   @Column({ field: "opcoes_tipo_id", type: DataType.NUMBER })
   opcoesTipoId: number;

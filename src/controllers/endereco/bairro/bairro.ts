@@ -5,6 +5,7 @@ import { BairroValidator, BairroValidatorFind } from "./validacao_dados";
 import Bairro from "@models/bairro";
 import Cidade from "@models/cidade";
 import HelperBairro from "@helpers/bairro";
+import HelperCidade from "@helpers/cidade";
 
 export default class BairroController extends EnderecoController {
 
@@ -14,12 +15,12 @@ export default class BairroController extends EnderecoController {
 
       // ------------------------------------------------------------------------------------------------------
 
-      const cidade: Cidade = await this.obtemCidade(undefined, bairro.cidadeId);
+      const cidade: Cidade = await new HelperCidade().obtemCidade(undefined, bairro.cidadeId);
 
       if (!cidade)
         throw new Error("A cidade fornecida não existe cadastrada, cadastre-a antes e posteriormente forneça bairros a ela.");
 
-      const bairroExistente: Bairro = await this.obtemBairro(undefined, bairro.nome, bairro.cidadeId);
+      const bairroExistente: Bairro = await new HelperBairro().obtemBairro(undefined, bairro.nome, bairro.cidadeId);
 
       if (bairroExistente)
         throw new Error(`O Bairro ${bairro.nome} já existe cadastrado na cidade: ${cidade.nome}`);

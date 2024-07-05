@@ -6,6 +6,7 @@ import EnderecoController from "../endereco_controller";
 import { CidadeValidator, CidadeValidatorFind } from "./validacao_dados";
 import Cidade from "@models/cidade";
 import HelperCidade from "@helpers/cidade";
+import HelperEstado from "@helpers/estado";
 
 interface Regiao {
   id: number;
@@ -46,7 +47,7 @@ export default class CidadeController extends EnderecoController {
 
       // ------------------------------------------------------------------------------------------------------
 
-      const cidadeExistente: Cidade = await this.obtemCidade(cidade.ibgeId);
+      const cidadeExistente: Cidade = await new HelperCidade().obtemCidade(cidade.ibgeId);
 
       if (cidadeExistente)
         throw new Error(`A Cidade ${cidade.nome} IBGEID: ${cidade.ibgeId} Já existe cadastrada.`);
@@ -65,7 +66,7 @@ export default class CidadeController extends EnderecoController {
 
       // ------------------------------------------------------------------------------------------------------
 
-      const estado: Estado = await this.obtemEstado(undefined, cidade.estadoId);
+      const estado: Estado = await new HelperEstado().obtemEstado(undefined, cidade.estadoId);
 
       if (!estado)
         throw new Error("O estado informado não existe na base interna de dados, cadastre-o e posteriormente tente inserir" +

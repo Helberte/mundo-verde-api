@@ -23,6 +23,23 @@ class HelperEstado extends Controller {
       throw new Error("Nenhum registro foi atualizado.");
   }
 
+  async obtemEstado(ibgeId?: number, id?: number): Promise<Estado> {
+    let where: any = {};
+
+    if (!ibgeId && !id)
+      throw new Error("Forneça o ibgeId ou o Id do cadastro do estado no sistema.");
+
+    if (ibgeId)
+      where.ibgeId = ibgeId;
+
+    if (id)
+      where.id = id;
+
+    const estado: Estado = await Estado.findOne({ where });
+
+    return estado;
+  }
+
 }
 
 export default HelperEstado;
