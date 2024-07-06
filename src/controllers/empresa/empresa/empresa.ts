@@ -169,6 +169,7 @@ export default class EmpresasController extends EmpresaController {
     try {
       const dados: EnderecoEmpresaValidator = await validaParametros<EnderecoEmpresaValidator, any>(EnderecoEmpresaValidator, req.body);
       let enderecoRetornar: EmpresaEndereco;
+      // let objPropriedadesAlteradas: any = {};
 
       // Só será permitido adicionar endereço a empresa que o usuário estiver logado ou se, a empresa
       // que está tentando atualizar o endereço ou adicionar endereço for diferente da empresa cujo usuário estiver
@@ -254,25 +255,25 @@ export default class EmpresasController extends EmpresaController {
       // criar função que monta um objeto com as propriedades alteradas em dois objetos passados por parametro
 
       if (enderecoEmpresa) {
-        const endAntigo:   [string, any][]    = Object.entries(enderecoEmpresa.dataValues);
-        // const chaveAntigo: string[] = Object.keys(enderecoEmpresa.dataValues);
-        const endNovo:     [string, any][]    = Object.entries(endereco.dataValues);
-        // const chaveNovo:   string[] = Object.keys(endereco.dataValues);
+        const endAntigo: [string, any][] = Object.entries(enderecoEmpresa.dataValues);
+        const endNovo:   [string, any][] = Object.entries(endereco.dataValues);
+        let where: string = "";
 
         for (var [keyAntigo, valorAntigo] of endAntigo) {
-
           for (var [keyNovo, valorNovo] of endNovo) {
 
             if (keyAntigo == "id") break;
 
             if ((keyAntigo == keyNovo) && valorAntigo != valorNovo) {
-              console.log("chave: " + keyNovo + ", valor: " + valorNovo);
+              where += `\"${keyNovo}\": \"${valorNovo}\",`;
               break;
             }
 
             if (keyAntigo == keyNovo) break;
           }
         }
+
+        console.log("{ " + where + " }");
       }
 
       console.log("\n------------------------------------------------------------------------------------------------------\n");
