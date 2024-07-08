@@ -3,6 +3,10 @@ import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Table } fr
 import Empresa from "./empresa";
 import Opcoes from "./opcao";
 
+export enum GruposDeOpcoes {
+  TiposEndereco = 1
+}
+
 @Table({ tableName: "grupo_opcoes", updatedAt: false })
 export default class GrupoOpcoes extends SequelizeModel<GrupoOpcoes> {
 

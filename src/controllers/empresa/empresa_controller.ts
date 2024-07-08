@@ -1,9 +1,14 @@
 import Controller from "@controllers/controller"
 import { limpaFormatacaoCNPJ } from "@helpers/utils";
+import Bairro from "@models/bairro";
+import Cidade from "@models/cidade";
 import Empresa from "@models/empresa";
 import EmpresaEndereco from "@models/empresa_endereco";
 import Endereco from "@models/endereco";
+import Estado from "@models/estado";
 import GrupoEmpresa from "@models/grupo_empresa";
+import { GruposDeOpcoes } from "@models/grupo_opcoes";
+import Opcoes from "@models/opcao";
 import moment from "moment";
 import { FindOptions, Op, Transaction } from "sequelize";
 
@@ -209,15 +214,42 @@ class EmpresaController extends Controller {
             }
           ]
         }
-      )).endereco;
+      ))?.endereco;
 
     } else {
       empresaEndereco = await EmpresaEndereco.findOne(
         {
+          attributes: {
+            exclude: [ ...this.excludeBase, "empresaId", "enderecoId" ]
+          },
           include: [
             {
               model: Endereco,
-              required: true
+              required: true,
+              attributes: {
+                exclude: [ ...this.excludeBase, "opcoesTipoId", "bairroId", "cidadeId", "estadoId" ]
+              },
+              include: [
+                {
+                  model: Opcoes,
+                  required: true,
+                  where: {
+                    grupoOpcoesId: GruposDeOpcoes.TiposEndereco
+                  }
+                },
+                {
+                  model: Estado,
+                  required: true
+                },
+                {
+                  model: Bairro,
+                  required: true
+                },
+                {
+                  model: Cidade,
+                  required: true
+                }
+              ]
             },
             {
               model: Empresa,
@@ -248,45 +280,15 @@ class EmpresaController extends Controller {
     return enderecoInserido;
   }
 
-  async atualizaEnderecoEmpresa(enderecoAntigo: Endereco, enderecoNovo: Endereco, transaction: Transaction): Promise<Endereco | undefined> {
-    const update: any = { };
+  async atualizaEnderecoEmpresa(endereco: Endereco, objCampos: any, transaction: Transaction): Promise<boolean> {
+    if (Object.keys(objCampos).length > 0) {
+      objCampos.updatedAt = moment()
 
-    if (enderecoAntigo.rua != enderecoNovo.rua)
-      update.rua = enderecoNovo.rua;
+      await endereco.update({ ...objCampos }, undefined, { transaction });
 
-    if (enderecoAntigo.numero != enderecoNovo.numero)
-      update.numero = enderecoNovo.numero;
-
-    if (enderecoAntigo.opcoesTipoId != enderecoNovo.opcoesTipoId)
-      update.opcoesTipoId = enderecoNovo.opcoesTipoId;
-
-    if (enderecoAntigo.observacao != enderecoNovo.observacao)
-      update.observacao = enderecoNovo.observacao;
-
-    if (enderecoAntigo.complemento != enderecoNovo.complemento)
-      update.complemento = enderecoNovo.complemento;
-
-    if (enderecoAntigo.cep != enderecoNovo.cep)
-      update.cep = enderecoNovo.cep;
-
-    if (enderecoAntigo.estadoId != enderecoNovo.estadoId)
-      update.estadoId = enderecoNovo.estadoId;
-
-    if (enderecoAntigo.cidadeId != enderecoNovo.cidadeId)
-      update.cidadeId = enderecoNovo.cidadeId;
-
-    if (enderecoAntigo.bairroId != enderecoNovo.bairroId)
-      update.bairroId = enderecoNovo.bairroId;
-
-    if (Object.keys(update).length > 0) {
-      update.updatedAt = moment()
-
-      const enderecoAtualizado: Endereco = await enderecoAntigo.update({ ...update }, undefined, { transaction });
-
-      return enderecoAtualizado;
+      return true;
     }
-
-    return undefined
+    return false
   }
 
   //#endregion

@@ -239,3 +239,38 @@ export function limpaFormatacaoCEP(cep: string): string {
     return undefined;
   }
 }
+
+export function retornaDiferencaObjetos(objeto1: any, objeto2: any): any {
+  try {
+    if(Object.keys(objeto1).length > 0 && Object.keys(objeto2).length > 0) {
+
+      const arrayObjeto_1: [string, any][] = Object.entries(objeto1);
+      const arrayObjeto_2: [string, any][] = Object.entries(objeto2);
+
+      let stringJSON:  string = "";
+      let objetoFinal: any    = { };
+
+      for (var [keyObj1, valorObj1] of arrayObjeto_1) {
+        for (var [keyObj2, valorObj2] of arrayObjeto_2) {
+
+          if (keyObj1 == "id") break;
+
+          if ((keyObj1 == keyObj2) && valorObj1 != valorObj2) {
+            stringJSON += `\"${keyObj2}\": \"${valorObj2}\",`;
+            break;
+          }
+
+          if (keyObj1 == keyObj2) break;
+        }
+      }
+
+      objetoFinal = JSON.parse("{ " + stringJSON.substring(0, stringJSON.length - 1) + " }");
+
+      return objetoFinal;
+    } else {
+      return { };
+    }
+  } catch (error) {
+    return { };
+  }
+}

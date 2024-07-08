@@ -1,4 +1,4 @@
-import { limpaFormatacaoCEP, limpaFormatacaoCNPJ, validaParametros } from "@helpers/utils";
+import { limpaFormatacaoCEP, limpaFormatacaoCNPJ, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
 import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorUpdate, EnderecoEmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
@@ -13,7 +13,7 @@ import Cidade from "@models/cidade";
 import HelperCidade from "@helpers/cidade";
 import Bairro from "@models/bairro";
 import HelperBairro from "@helpers/bairro";
-// import { Transaction } from "sequelize";
+import { Transaction } from "sequelize";
 import EmpresaEndereco from "@models/empresa_endereco";
 
 export default class EmpresasController extends EmpresaController {
@@ -165,28 +165,41 @@ export default class EmpresasController extends EmpresaController {
     }
   }
 
+  /**
+  * @description Só será permitido adicionar endereço a empresa que o usuário estiver logado ou se, a empresa
+  * que está tentando atualizar o endereço ou adicionar endereço for diferente da empresa cujo usuário estiver
+  * logado, só será pertitido isso, caso o usuário tenha acesso a esta empresa
+  *
+  * resumo:
+  *
+  * if (empresa == empresa usuário logado?)
+  *   atualiza ou insere de boa o endereço
+  * else
+  * {
+  *   if (verifica se o usuário tem acesso àquela empresa)
+  *     atualiza ou insere de boa o endereço
+  *   else
+  *     sai fora!
+  * }
+  *
+  * @memberof EmpresasController
+  *
+  * @data 08/07/2024
+  *
+  * @author Helberte Costa
+  *
+  * @param req Request
+  * @param res Response
+  *
+  * @returns Response
+  */
   public async adicionaEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
     try {
       const dados: EnderecoEmpresaValidator = await validaParametros<EnderecoEmpresaValidator, any>(EnderecoEmpresaValidator, req.body);
-      let enderecoRetornar: EmpresaEndereco;
-      // let objPropriedadesAlteradas: any = {};
-
-      // Só será permitido adicionar endereço a empresa que o usuário estiver logado ou se, a empresa
-      // que está tentando atualizar o endereço ou adicionar endereço for diferente da empresa cujo usuário estiver
-      // logado, só será pertitido isso, caso o usuário tenha acesso a esta empresa
-      /*
-        resumo:
-
-        if (empresa == empresa usuário logado?)
-          atualiza ou insere de boa o endereço
-        else
-        {
-          if (verifica se o usuário tem acesso àquela empresa)
-            atualiza ou insere de boa o endereço
-          else
-            sai fora!
-        }
-      */
+      let enderecoRetornar:   EmpresaEndereco;
+      let objetoUpdate:       any     = { };
+      let enderecoAtualizado: boolean = false;
+      let mensagem:           string  = "";
 
       // verificar se a empresa existe
       let empresaExistente: Empresa = await this.obtemEmpresa(undefined, dados.empresaId);
@@ -234,7 +247,7 @@ export default class EmpresasController extends EmpresaController {
       if (!bairro)
         throw new Error("O Bairro informado não existe cadastrado ou não pertence a esta cidade!");
 
-      // se não possuir endereço => inserir novo endereço e vincula-lo a empresa, caso exista, apenas atualizar
+      // ------------------------------------------------------------------------------------------------------
 
       const endereco: Endereco = new Endereco();
 
@@ -248,49 +261,39 @@ export default class EmpresasController extends EmpresaController {
       endereco.cidadeId     = dados.cidadeId;
       endereco.estadoId     = dados.estadoId;
 
-      // ------------------------------------------------------------------------------------------------------
-
-      console.log("\n------------------------------------------------------------------------------------------------------\n");
-
-      // criar função que monta um objeto com as propriedades alteradas em dois objetos passados por parametro
-
+      // se o endereço já existe, tenta atualizar somente as propriedades alteradas
       if (enderecoEmpresa) {
-        const endAntigo: [string, any][] = Object.entries(enderecoEmpresa.dataValues);
-        const endNovo:   [string, any][] = Object.entries(endereco.dataValues);
-        let where: string = "";
+        objetoUpdate = retornaDiferencaObjetos(enderecoEmpresa.dataValues, endereco.dataValues)
 
-        for (var [keyAntigo, valorAntigo] of endAntigo) {
-          for (var [keyNovo, valorNovo] of endNovo) {
-
-            if (keyAntigo == "id") break;
-
-            if ((keyAntigo == keyNovo) && valorAntigo != valorNovo) {
-              where += `\"${keyNovo}\": \"${valorNovo}\",`;
-              break;
-            }
-
-            if (keyAntigo == keyNovo) break;
-          }
+        if (Object.keys(objetoUpdate).length > 0) {
+          await this.db().transaction(async (transaction: Transaction)=> {
+              enderecoAtualizado = await this.atualizaEnderecoEmpresa(enderecoEmpresa, objetoUpdate, transaction);
+          });
         }
-
-        console.log("{ " + where + " }");
+      } else {
+        await this.db().transaction(async (transaction: Transaction)=> {
+          await this.insereEnderecoEmpresa(endereco, dados.empresaId, transaction);
+        });
       }
 
-      console.log("\n------------------------------------------------------------------------------------------------------\n");
+      // ------------------------------------------------------------------------------------------------------
+      // define a mensagem a ser retornada ao usuário
+
+      mensagem = "Endereço inserido com sucesso!";
+
+      if (enderecoEmpresa && Object.keys(objetoUpdate).length > 0) {
+        mensagem = "Endereço atualizado com sucesso!";
+      } else if (enderecoEmpresa && Object.keys(objetoUpdate).length <= 0) {
+        mensagem = "Nenhuma informação foi atualizada!";
+      }
 
       // ------------------------------------------------------------------------------------------------------
-/*
-      await this.db().transaction(async (transaction: Transaction)=> {
-        if (!enderecoEmpresa)
-          await this.insereEnderecoEmpresa(endereco, dados.empresaId, transaction);
-        else
-          await this.atualizaEnderecoEmpresa(enderecoEmpresa, endereco, transaction);
-      });
-*/
+
       enderecoRetornar = await this.buscaEnderecoEmpresa(dados.empresaId, true) as EmpresaEndereco;
 
       return res.status(200).json({
-        mensagem: `Endereço ${enderecoEmpresa ? "atualizado" : "inserido" } com sucesso!`,
+        mensagem,
+        enderecoAtualizado,
         empresaEndereco: { ...enderecoRetornar.dataValues }
       });
 
@@ -298,4 +301,8 @@ export default class EmpresasController extends EmpresaController {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
+
+  // public async obtemEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
+
+  // }
 }
