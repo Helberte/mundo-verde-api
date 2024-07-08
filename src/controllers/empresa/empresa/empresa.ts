@@ -1,4 +1,4 @@
-import { formataCNPJ, limpaFormatacaoCEP, limpaFormatacaoCNPJ, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
+import { formataCNPJ, limpaFormatacaoCEP, limpaFormatacaoNumeros, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
 import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorObterEndereco, EmpresaValidatorUpdate, EnderecoEmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
@@ -143,8 +143,8 @@ export default class EmpresasController extends EmpresaController {
       if (empresa.nomeFantasia.trim() != empresaExistente.nomeFantasia.trim())
         values.nomeFantasia = empresa.nomeFantasia.trim();
 
-      if (limpaFormatacaoCNPJ(empresa.cnpj) != limpaFormatacaoCNPJ(empresaExistente.cnpj))
-        values.cnpj = limpaFormatacaoCNPJ(empresa.cnpj);
+      if (limpaFormatacaoNumeros(empresa.cnpj) != limpaFormatacaoNumeros(empresaExistente.cnpj))
+        values.cnpj = limpaFormatacaoNumeros(empresa.cnpj);
 
       if (empresa.filial.trim() != empresaExistente.filial)
         values.filial = empresa.filial.trim();

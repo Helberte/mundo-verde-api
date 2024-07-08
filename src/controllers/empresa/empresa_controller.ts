@@ -1,5 +1,5 @@
 import Controller from "@controllers/controller"
-import { limpaFormatacaoCNPJ } from "@helpers/utils";
+import { limpaFormatacaoNumeros } from "@helpers/utils";
 import Bairro from "@models/bairro";
 import Cidade from "@models/cidade";
 import Empresa from "@models/empresa";
@@ -83,7 +83,7 @@ class EmpresaController extends Controller {
       throw new Error("Para buscar uma empresa é preciso informar ou o ID ou o CNPJ da mesma.");
 
     if (cnpj)
-      where.cnpj = limpaFormatacaoCNPJ(cnpj);
+      where.cnpj = limpaFormatacaoNumeros(cnpj);
 
     if (id)
       where.id = id;
@@ -181,7 +181,7 @@ class EmpresaController extends Controller {
           [Op.substring]: findLike.nomeFantasia ? findLike.nomeFantasia : ""
         },
         cnpj: {
-          [Op.substring]: findLike.cnpj ? limpaFormatacaoCNPJ(findLike.cnpj) : ""
+          [Op.substring]: findLike.cnpj ? limpaFormatacaoNumeros(findLike.cnpj) : ""
         }
       },
       order: [

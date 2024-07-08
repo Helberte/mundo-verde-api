@@ -147,20 +147,28 @@ export function validarCNPJ(cnpj: string): boolean {
     return false;
 }
 
-export function limpaFormatacaoCNPJ(cnpj: string): string {
+/**
+ * @description Limpa um texto dos caracteres especiais deixando apenas os números presentes nele.
+ *
+ * Ex: valor de entrada: 1.;15;*5#7!7#@8'8"8)9$1 => valor de saída: 115577888
+ *
+ * @param texto A ser limpo
+ * @returns Uma string com o texto limpo sem caracteres especiais
+ */
+export function limpaFormatacaoNumeros(texto: string): string {
   try {
 
-    if(!cnpj)
-      return cnpj;
+    if(!texto)
+      return texto;
 
-    let cnpjLimpo: string = "";
+    let numeroLimpo: string = "";
 
-    for (const caractere of cnpj) {
+    for (const caractere of texto) {
       if (isInt(caractere))
-        cnpjLimpo = cnpjLimpo + caractere;
+        numeroLimpo = numeroLimpo + caractere;
     }
 
-    return cnpjLimpo;
+    return numeroLimpo;
   } catch (error) {
     return "N/A";
   }
@@ -172,7 +180,7 @@ export function formataCNPJ(cnpj: string): string {
       return cnpj;
 
     let   cnpjFormatado: string = "";
-    const cnpjLimpo:     string = limpaFormatacaoCNPJ(cnpj);
+    const cnpjLimpo:     string = limpaFormatacaoNumeros(cnpj);
 
     for (let i = 0; i < cnpjLimpo.length; i++) {
 
@@ -272,5 +280,72 @@ export function retornaDiferencaObjetos(objeto1: any, objeto2: any): any {
     }
   } catch (error) {
     return { };
+  }
+}
+
+/**
+ * fontes:
+ * https://www.macoratti.net/alg_cpf.htm
+ * https://dicasdeprogramacao.com.br/algoritmo-para-validar-cpf/
+ *
+ * @param cpf
+ * @returns
+ */
+export function validaCPF(cpf: string): boolean {
+  try {
+    if(!cpf)
+      return false;
+
+    let soma_1:     number = 0;
+    let soma_2:     number = 0;
+    let restoDiv_1: number = 0;
+    let restoDiv_2: number = 0;
+    let contador_1: number = 0;
+
+    const array_1: number[] = [10, 9,  8, 7, 6, 5, 4, 3, 2]
+    const array_2: number[] = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+
+    let cpfLimpo:       string = limpaFormatacaoNumeros(cpf);
+    let cpfValidacao_2: string = "";
+
+    if (cpfLimpo.length != 11) return false;
+
+    // ------------------------------------------------------------------------------------------------
+
+    for (let i = 0; i < cpfLimpo.length; i++) {
+      if (cpfLimpo[0] == cpfLimpo[i])
+        contador_1++;
+    }
+
+    if (contador_1 == 11) return false;
+
+    // ------------------------------------------------------------------------------------------------
+
+    for (let i = 0; i < array_1.length; i++)
+      soma_1 = soma_1 + (Number(cpfLimpo[i]) * array_1[i]);
+
+    restoDiv_1 = (soma_1 * 10) % 11;
+
+    if (restoDiv_1 == 10) restoDiv_1 = 0;
+
+    // 1° Validação
+    if (Number(cpfLimpo[9]) != restoDiv_1) return false;
+
+    // ------------------------------------------------------------------------------------------------
+
+    cpfValidacao_2 = cpfLimpo.substring(0, 9) + String(restoDiv_1);
+
+    for (let i = 0; i < array_2.length; i++)
+      soma_2 = soma_2 + (Number(cpfValidacao_2[i]) * array_2[i]);
+
+    restoDiv_2 = (soma_2 * 10) % 11;
+
+    // 2° Validação
+    if (Number(cpfLimpo[10]) != restoDiv_2) return false;
+
+    return true;
+
+  } catch (error) {
+    return false;
   }
 }

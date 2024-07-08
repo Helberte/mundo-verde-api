@@ -1,4 +1,4 @@
-import { limpaFormatacaoCNPJ, validarCNPJ } from "@helpers/utils";
+import { limpaFormatacaoNumeros, validarCNPJ } from "@helpers/utils";
 import { Transform, TransformFnParams } from "class-transformer";
 import {
   IsBoolean,
@@ -47,7 +47,7 @@ class EmpresaValidator {
   @Length(14, 18, { message: "O tamanho CNPJ é inválido" })
   @IsNotEmpty({ message: "O CNPJ está vazio" })
   @IsString({ message: "O CNPJ precisa ser um texto" })
-  @Transform((params: TransformFnParams) => limpaFormatacaoCNPJ(sanitizeHtml(params.value)))
+  @Transform((params: TransformFnParams) => limpaFormatacaoNumeros(sanitizeHtml(params.value)))
   cnpj: string;
 
   @Length(2, 8, { message: "O tamanho da Filial é inválido" })
@@ -257,7 +257,7 @@ class EmpresaValidatorObterEndereco {
   @Length(14, 18, { message: "O tamanho CNPJ é inválido" })
   @IsString({ message: "O CNPJ precisa ser um texto" })
   @Validate(validadorCNPJ)
-  @Transform((params: TransformFnParams) => limpaFormatacaoCNPJ(sanitizeHtml(params.value)))
+  @Transform((params: TransformFnParams) => limpaFormatacaoNumeros(sanitizeHtml(params.value)))
   cnpj: string;
 }
 
