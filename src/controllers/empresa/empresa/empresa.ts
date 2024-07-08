@@ -1,6 +1,6 @@
-import { limpaFormatacaoCEP, limpaFormatacaoCNPJ, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
+import { formataCNPJ, limpaFormatacaoCEP, limpaFormatacaoCNPJ, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
 import { Request, Response } from "express";
-import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorUpdate, EnderecoEmpresaValidator } from "./validacao_dados";
+import { EmpresaValidator, EmpresaValidatorFind, EmpresaValidatorObterEndereco, EmpresaValidatorUpdate, EnderecoEmpresaValidator } from "./validacao_dados";
 import EmpresaController from "../empresa_controller";
 import Empresa from "@models/empresa";
 import HelperEmpresa from "@helpers/empresa";
@@ -302,7 +302,29 @@ export default class EmpresasController extends EmpresaController {
     }
   }
 
-  // public async obtemEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
+  public async obtemEnderecoEmpresa(req: Request, res: Response): Promise<Response> {
+    try {
+      const dados: EmpresaValidatorObterEndereco = await validaParametros<EmpresaValidatorObterEndereco, any>(EmpresaValidatorObterEndereco, req.query);
+      const empresaId = Number(dados.empresaId);
 
-  // }
+      // ------------------------------------------------------------------------------------------------------
+
+      // verificar se a empresa existe
+      let empresaExistente: Empresa = await this.obtemEmpresa(dados.cnpj, empresaId);
+
+      if (!empresaExistente)
+        throw new Error(`A empresa informada, não existe cadastrada. ID: ${empresaId}, CNPJ: ${formataCNPJ(dados.cnpj)}`);
+
+      // ------------------------------------------------------------------------------------------------------
+
+      const endereco: EmpresaEndereco = await this.buscaEnderecoEmpresa(empresaId, true) as EmpresaEndereco;
+
+      // ------------------------------------------------------------------------------------------------------
+
+      return res.status(200).json({ ...endereco.dataValues });
+
+    } catch (error) {
+      return res.status(500).json({ erro: (error as Error).message });
+    }
+  }
 }

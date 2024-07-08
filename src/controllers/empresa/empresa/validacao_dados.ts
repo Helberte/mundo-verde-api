@@ -247,10 +247,25 @@ class EnderecoEmpresaValidator {
   //#endregion
 }
 
+class EmpresaValidatorObterEndereco {
+  @IsNumberString({ no_symbols: true }, { message: "O ID da empresa é Inválido." })
+  @IsNotEmpty({message: "O Id da Empresa é obrigatorio"})
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  empresaId: string;
+
+  @IsNotEmpty({ message: "O CNPJ está vazio" })
+  @Length(14, 18, { message: "O tamanho CNPJ é inválido" })
+  @IsString({ message: "O CNPJ precisa ser um texto" })
+  @Validate(validadorCNPJ)
+  @Transform((params: TransformFnParams) => limpaFormatacaoCNPJ(sanitizeHtml(params.value)))
+  cnpj: string;
+}
+
 export {
   EmpresaValidator,
   EmpresaValidatorFind,
   EmpresaValidatorDelete,
   EmpresaValidatorUpdate,
-  EnderecoEmpresaValidator
+  EnderecoEmpresaValidator,
+  EmpresaValidatorObterEndereco
 }

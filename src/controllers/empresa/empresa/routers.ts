@@ -11,6 +11,10 @@ router.post("/endereco", async (req: Request, res: Response) => {
   await (new Empresas()).adicionaEnderecoEmpresa(req, res);
 });
 
+router.get("/endereco", async (req: Request, res: Response) => {
+  await (new Empresas()).obtemEnderecoEmpresa(req, res);
+});
+
 router.get("/", async (req: Request, res: Response) => {
   await (new Empresas()).buscaEmpresas(req, res);
 });
