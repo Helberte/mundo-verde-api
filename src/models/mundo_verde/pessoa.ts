@@ -1,12 +1,12 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { Moment } from "moment";
 import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasOne, Table } from "sequelize-typescript";
-import Endereco from "./endereco";
 import Empresa from "./empresa";
 import EmpresaPessoa from "./empresa_pessoa";
 import Usuario from "./usuario";
 import Representante from "./representante";
 import Opcoes from "./opcao";
+import PessoaEndereco from "./pessoa_endereco";
 
 @Table({ tableName: "pessoa", updatedAt: false })
 export default class Pessoa extends SequelizeModel<Pessoa> {
@@ -50,13 +50,6 @@ export default class Pessoa extends SequelizeModel<Pessoa> {
   @Column
   rg: string;
 
-  @ForeignKey(() => Endereco)
-  @Column({ field: "fk_endereco_id", type: DataType.NUMBER })
-  enderecoId: number;
-
-  @BelongsTo(() => Endereco)
-  endereco: Endereco;
-
   @BelongsToMany(() => Empresa, () => EmpresaPessoa)
   empresas: Empresa[];
 
@@ -65,4 +58,7 @@ export default class Pessoa extends SequelizeModel<Pessoa> {
 
   @HasOne(() => Representante)
   representante: Representante;
+
+  @HasOne(() => PessoaEndereco)
+  pessoaEndereco: PessoaEndereco;
 }

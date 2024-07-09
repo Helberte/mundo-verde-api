@@ -24,7 +24,7 @@ export default class EmpresasController extends EmpresaController {
 
       // ------------------------------------------------------------------------------------------------------
 
-      let empresaExistente: Empresa = await this.obtemEmpresa(empresa.cnpj.trim());
+      let empresaExistente: Empresa = await new HelperEmpresa().obtemEmpresa(empresa.cnpj.trim());
 
       if (empresaExistente)
         throw new Error(`Já existe uma empresa com o mesmo CNPJ: ${empresa.cnpj}`);
@@ -97,7 +97,7 @@ export default class EmpresasController extends EmpresaController {
       // ------------------------------------------------------------------------------------------------------
 
       // verifica se a empresa existe
-      let empresaExistente: Empresa = await this.obtemEmpresa(undefined, empresa.id);
+      let empresaExistente: Empresa = await new HelperEmpresa().obtemEmpresa(undefined, empresa.id);
 
       if (!empresaExistente)
         throw new Error(`Esta empresa ainda não existe cadastrada na nossa base de dados. CNPJ: ${empresa.cnpj}`);
@@ -105,7 +105,7 @@ export default class EmpresasController extends EmpresaController {
       // ------------------------------------------------------------------------------------------------------
 
       // verifica se existe outra empresa com o mesmo cnpj
-      let empresaDuplicada: Empresa = await this.obtemEmpresa(empresa.cnpj.trim());
+      let empresaDuplicada: Empresa = await new HelperEmpresa().obtemEmpresa(empresa.cnpj.trim());
 
       if (empresaDuplicada && empresaDuplicada.id != empresa.id)
         throw new Error(`Já existe uma empresa com o mesmo CNPJ: ${empresa.cnpj}`);
@@ -202,7 +202,7 @@ export default class EmpresasController extends EmpresaController {
       let mensagem:           string  = "";
 
       // verificar se a empresa existe
-      let empresaExistente: Empresa = await this.obtemEmpresa(undefined, dados.empresaId);
+      let empresaExistente: Empresa = await new HelperEmpresa().obtemEmpresa(undefined, dados.empresaId);
 
       if (!empresaExistente)
         throw new Error(`A empresa informada, não existe cadastrada. ID: ${dados.empresaId}`);
@@ -310,7 +310,7 @@ export default class EmpresasController extends EmpresaController {
       // ------------------------------------------------------------------------------------------------------
 
       // verificar se a empresa existe
-      let empresaExistente: Empresa = await this.obtemEmpresa(dados.cnpj, empresaId);
+      let empresaExistente: Empresa = await new HelperEmpresa().obtemEmpresa(dados.cnpj, empresaId);
 
       if (!empresaExistente)
         throw new Error(`A empresa informada, não existe cadastrada. ID: ${empresaId}, CNPJ: ${formataCNPJ(dados.cnpj)}`);

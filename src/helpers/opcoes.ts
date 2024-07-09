@@ -3,7 +3,8 @@ import Opcoes from "@models/opcao";
 import GrupoOpcoes from "@models/grupo_opcoes";
 
 export enum EnumGruposOpcoes {
-  TiposEndereco = 1
+  TiposEndereco = 1,
+  SexoPessoas   = 2
 }
 
 class HelperOpcoes extends Controller {

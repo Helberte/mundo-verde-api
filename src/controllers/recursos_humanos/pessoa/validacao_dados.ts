@@ -78,7 +78,7 @@ class PessoaValidator {
   cpf: string;
 
   @Validate(validadorDataNascimento)
-  @MaxLength(14, { message: "O tamanho máximo da data foi excedido!" })
+  @MaxLength(19, { message: "O tamanho máximo da data foi excedido!" })
   @MinLength(8, { message: "O tamanho mínimo da data foi excedido!" })
   @IsNotEmpty({ message: "A Data do nascimento é obrigatoria" })
   @IsDateString(undefined, { message: "Data de Nascimento Inválida: $value" })

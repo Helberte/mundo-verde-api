@@ -76,25 +76,6 @@ class EmpresaController extends Controller {
 
   //#region Empresa
 
-  async obtemEmpresa(cnpj?: string, id?: number): Promise<Empresa> {
-    const where: any = { };
-
-    if (!cnpj && !id)
-      throw new Error("Para buscar uma empresa é preciso informar ou o ID ou o CNPJ da mesma.");
-
-    if (cnpj)
-      where.cnpj = limpaFormatacaoNumeros(cnpj);
-
-    if (id)
-      where.id = id;
-
-    const empresa: Empresa = await Empresa.findOne({
-      where
-    })
-
-    return empresa;
-  }
-
   async obtemEmpresaPorNome(razaoSocial: string = "", nomeFantasia: string = "", retornaTodas: boolean = false): Promise<Empresa | Empresa[] | undefined> {
 
     const options: FindOptions<Empresa> = { };

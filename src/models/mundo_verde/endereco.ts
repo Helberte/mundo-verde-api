@@ -1,11 +1,11 @@
 import SequelizeModel from "@core/database/sequelize_model";
 import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasOne, Table } from "sequelize-typescript";
 import Opcoes from "./opcao";
-import Pessoa from "./pessoa";
 import Bairro from "./bairro";
 import Cidade from "./cidade";
 import Estado from "./estado";
 import EmpresaEndereco from "./empresa_endereco";
+import PessoaEndereco from "./pessoa_endereco";
 
 @Table({ tableName: "endereco", updatedAt: false })
 export default class Endereco extends SequelizeModel<Endereco> {
@@ -57,9 +57,9 @@ export default class Endereco extends SequelizeModel<Endereco> {
   @BelongsTo(() => Opcoes)
   opcoesTipo: Opcoes;
 
-  @HasOne(() => Pessoa)
-  pessoa: Pessoa;
-
   @HasOne(() => EmpresaEndereco)
   empresaEndereco: EmpresaEndereco;
+
+  @HasOne(() => PessoaEndereco)
+  pessoaEndereco: PessoaEndereco;
 }
