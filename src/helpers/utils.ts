@@ -340,6 +340,8 @@ export function validaCPF(cpf: string): boolean {
 
     restoDiv_2 = (soma_2 * 10) % 11;
 
+    if (restoDiv_2 == 10) restoDiv_2 = 0;
+
     // 2° Validação
     if (Number(cpfLimpo[10]) != restoDiv_2) return false;
 
@@ -347,5 +349,33 @@ export function validaCPF(cpf: string): boolean {
 
   } catch (error) {
     return false;
+  }
+}
+
+export function formataCPF(cpf: string): string {
+  try {
+    let cpfLimpo:     string = limpaFormatacaoNumeros(cpf);
+    let cpfFormatado: string = "";
+
+    if (cpfLimpo.length !== 11)
+      return undefined;
+
+    for (let i = 0; i < cpfLimpo.length; i++) {
+      cpfFormatado = cpfFormatado + cpfLimpo[i];
+
+      if (i === 2)
+        cpfFormatado = cpfFormatado + ".";
+
+      if (i === 5)
+        cpfFormatado = cpfFormatado + ".";
+
+      if (i === 8)
+        cpfFormatado = cpfFormatado + "-";
+    }
+
+    return cpfFormatado;
+
+  } catch (error) {
+    return undefined;
   }
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import RecursosHumanosController from "../pessoa_controller";
 import { PessoaValidator } from "./validacao_dados";
-import { validaParametros } from "@helpers/utils";
+import { formataCPF, validaParametros } from "@helpers/utils";
 
 export default class PessoaController extends RecursosHumanosController {
 
@@ -11,6 +11,7 @@ export default class PessoaController extends RecursosHumanosController {
 
       return res.status(200).json({
         mensagem: "Cadastro da pessoa criado com sucesso!",
+        cpf: formataCPF(pessoa.cpf),
         pessoa
        });
 
