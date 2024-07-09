@@ -97,14 +97,14 @@ class PessoaValidator {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   email: string;
 
-  @Length(8, 14, { message: "Tamanho do telefone inválido" })
+  @Length(8, 15, { message: "Tamanho do telefone 1 inválido" })
   @IsMobilePhone("pt-BR", { strictMode: false }, { message: "Número de telefone inválido" })
   @IsString({ message: "O telefone precisa ser um texto" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   telefone1: string;
 
-  @Length(8, 14, { message: "Tamanho do telefone inválido" })
+  @Length(8, 15, { message: "Tamanho do telefone 2 inválido" })
   @IsMobilePhone("pt-BR", { strictMode: false }, { message: "Número de telefone inválido" })
   @IsString({ message: "O telefone precisa ser um texto" })
   @IsOptional()

@@ -44,7 +44,7 @@ export default class PessoaController extends RecursosHumanosController {
       novaPessoa.email          = pessoa.email?.trim() ? pessoa.email.trim() : null;
       novaPessoa.telefone1      = limpaFormatacaoNumeros(pessoa.telefone1) ? limpaFormatacaoNumeros(pessoa.telefone1) : null;
       novaPessoa.telefone2      = limpaFormatacaoNumeros(pessoa.telefone2) ? limpaFormatacaoNumeros(pessoa.telefone2) : null;
-      novaPessoa.rg             = limpaFormatacaoNumeros(pessoa.rg) ? limpaFormatacaoNumeros(pessoa.rg) : null;
+      novaPessoa.rg             = limpaFormatacaoNumeros(pessoa.rg)        ? limpaFormatacaoNumeros(pessoa.rg)        : null;
 
       // fazer a insersão da pessoa cadastrada na empresa onde ela irá pertencer
 
