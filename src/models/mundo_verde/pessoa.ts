@@ -6,6 +6,7 @@ import Empresa from "./empresa";
 import EmpresaPessoa from "./empresa_pessoa";
 import Usuario from "./usuario";
 import Representante from "./representante";
+import Opcoes from "./opcao";
 
 @Table({ tableName: "pessoa", updatedAt: false })
 export default class Pessoa extends SequelizeModel<Pessoa> {
@@ -26,9 +27,12 @@ export default class Pessoa extends SequelizeModel<Pessoa> {
   @Column({ field: "data_nascimento", type: DataType.DATE })
   dataNascimento: Moment;
 
-  @AllowNull(false)
+  @ForeignKey(() => Opcoes)
   @Column({ field: "opcoes_sexo_id", type: DataType.NUMBER })
   opcoesSexoId: number;
+
+  @BelongsTo(() => Opcoes)
+  sexo: Opcoes;
 
   @AllowNull(true)
   @Column

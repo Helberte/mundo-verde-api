@@ -187,4 +187,8 @@ class PessoaValidatorUpdate extends PessoaValidator {
   id: number;
 }
 
-export { PessoaValidator, PessoaValidatorFind, PessoaValidatorUpdate }
+export {
+  PessoaValidator,
+  PessoaValidatorFind,
+  PessoaValidatorUpdate
+}

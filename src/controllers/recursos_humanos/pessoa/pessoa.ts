@@ -9,6 +9,9 @@ export default class PessoaController extends RecursosHumanosController {
     try {
       const pessoa: PessoaValidator = await validaParametros<PessoaValidator, any>(PessoaValidator, req.body);
 
+      // Depois da parte da validacao do usuário, inserir a pessoa na empresa na qual o usuário que chamou esta rota
+      // está logado
+
       return res.status(200).json({
         mensagem: "Cadastro da pessoa criado com sucesso!",
         cpf: formataCPF(pessoa.cpf),

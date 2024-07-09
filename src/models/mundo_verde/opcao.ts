@@ -5,6 +5,7 @@ import Empresa from "./empresa";
 import Endereco from "./endereco";
 import PrePedido from "./pre_pedido";
 import PedidoCompra from "./pedido_compra";
+import Pessoa from "./pessoa";
 
 @Table({ tableName: "opcoes", updatedAt: false })
 export default class Opcoes extends SequelizeModel<Opcoes> {
@@ -34,4 +35,7 @@ export default class Opcoes extends SequelizeModel<Opcoes> {
 
   @HasMany(() => PedidoCompra)
   pedidosCompra: PedidoCompra[];
+
+  @HasMany(() => Pessoa)
+  pessoas: Pessoa[];
 }
