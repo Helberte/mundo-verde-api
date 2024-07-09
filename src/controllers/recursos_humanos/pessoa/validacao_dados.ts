@@ -141,10 +141,9 @@ class PessoaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   cpf: string;
 
-  @Validate(validadorDataNascimento)
   @MaxLength(14, { message: "O tamanho máximo da data foi excedido!" })
-  @MinLength(8, { message: "O tamanho mínimo da data foi excedido!" })
-  @IsDateString(undefined, { message: "Data de Nascimento Inválida: $value" })
+  @MinLength(1, { message: "O tamanho mínimo da data foi excedido!" })
+  @IsString({ message: "Data de Nascimento Inválida: $value" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   dataNascimento: string;
@@ -155,31 +154,37 @@ class PessoaValidatorFind {
   @IsOptional()
   opcoesSexoId: number;
 
-  @Length(4, 150, { message: "Tamanho do email inválido" })
-  @IsEmail(undefined, { message: "Email inválido" })
+  @Length(1, 150, { message: "Tamanho do email inválido" })
+  @IsString({ message: "O email precisa ser um texto" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   email: string;
 
-  @Length(8, 14, { message: "Tamanho do telefone inválido" })
-  @IsMobilePhone("pt-BR", { strictMode: false }, { message: "Número de telefone inválido" })
-  @IsString({ message: "O telefone precisa ser um texto" })
+  @Length(1, 14, { message: "Tamanho do telefone inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O Telefone precisa ser somente números" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   telefone1: string;
 
-  @Length(8, 14, { message: "Tamanho do telefone inválido" })
-  @IsMobilePhone("pt-BR", { strictMode: false }, { message: "Número de telefone inválido" })
-  @IsString({ message: "O telefone precisa ser um texto" })
+  @Length(1, 14, { message: "Tamanho do telefone inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O Telefone precisa ser somente números" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   telefone2: string;
 
-  @Length(2, 20, { message: "Tamanho do RG inválido" })
+  @Length(1, 20, { message: "Tamanho do RG inválido" })
   @IsNumberString({ no_symbols: true }, { message: "RG inválido" })
   @IsOptional()
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   rg: string;
 }
 
-export { PessoaValidator, PessoaValidatorFind }
+class PessoaValidatorUpdate extends PessoaValidator {
+  @Max(99999999, { message: "O valor máximo para o ID da pessoa foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da pessoa é 1" })
+  @IsInt({ message: "O ID da pessoa precisa ser um número inteiro" })
+  @IsNotEmpty({message: "O Id da pessoa é obrigatorio"})
+  id: number;
+}
+
+export { PessoaValidator, PessoaValidatorFind, PessoaValidatorUpdate }
