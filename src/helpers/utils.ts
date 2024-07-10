@@ -1,7 +1,7 @@
 import { plainToClass } from "class-transformer";
 import { ValidationError, isArray, validate } from "class-validator";
 import moment from "moment";
-import { literal } from "sequelize";
+import { literal, Op } from "sequelize";
 import { isInt } from "validator";
 
 export async function validaParametros<T extends Object, O>(classe: new () => T, objeto: O): Promise<T> {
@@ -255,8 +255,7 @@ export function retornaDiferencaObjetos(objeto1: any, objeto2: any): any {
       const arrayObjeto_1: [string, any][] = Object.entries(objeto1);
       const arrayObjeto_2: [string, any][] = Object.entries(objeto2);
 
-      let stringJSON:  string = "";
-      let objetoFinal: any    = { };
+      let objetoFinal: any = { };
 
       for (var [keyObj1, valorObj1] of arrayObjeto_1) {
         for (var [keyObj2, valorObj2] of arrayObjeto_2) {
@@ -264,15 +263,13 @@ export function retornaDiferencaObjetos(objeto1: any, objeto2: any): any {
           if (keyObj1 == "id") break;
 
           if ((keyObj1 == keyObj2) && valorObj1 != valorObj2) {
-            stringJSON += `\"${keyObj2}\": \"${valorObj2}\",`;
+            Object.defineProperty(objetoFinal, keyObj2, { value: valorObj2, configurable: true, enumerable: true })
             break;
           }
 
           if (keyObj1 == keyObj2) break;
         }
       }
-
-      objetoFinal = JSON.parse("{ " + stringJSON.substring(0, stringJSON.length - 1) + " }");
 
       return objetoFinal;
     } else {
@@ -374,6 +371,49 @@ export function formataCPF(cpf: string): string {
     }
 
     return cpfFormatado;
+
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export function limpaObjeto(objeto: any): any {
+  try {
+    const chaveValor: [string, any][] = Object.entries(objeto);
+    const objetoRetorno: any = { }
+
+    for (var [chave, value] of chaveValor) {
+      if (value) {
+        Object.defineProperty(objetoRetorno, chave, { value, configurable: true, enumerable: true })
+      }
+    }
+
+    return objetoRetorno;
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export function returnObjetoLike(objeto: any, propriedades: string[]): any {
+  try {
+    const chaveValor: [string, any][] = Object.entries(objeto);
+    const objetoRetorno: any = { }
+
+    for (var [chave, value] of chaveValor) {
+      const nome: string = propriedades.find(x => x == chave);
+
+      if (nome && value) {
+        Object.defineProperty(objetoRetorno, chave, {
+            value: {
+              [Op.substring]: value
+            },
+            configurable: true,
+            enumerable: true
+          });
+      }
+    }
+
+    return objetoRetorno;
 
   } catch (error) {
     return undefined;

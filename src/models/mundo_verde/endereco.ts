@@ -13,7 +13,7 @@ export default class Endereco extends SequelizeModel<Endereco> {
   @Column
   rua: string;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column
   numero: string;
 
