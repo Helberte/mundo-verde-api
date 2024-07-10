@@ -11,6 +11,10 @@ router.post("/endereco", async (req: Request, res: Response) => {
   await (new Pessoa()).adicionaEnderecoPessoa(req, res);
 });
 
+router.put("/endereco", async (req: Request, res: Response) => {
+  await (new Pessoa()).editarEnderecoPessoa(req, res);
+});
+
 router.get("/", async (req: Request, res: Response) => {
   await (new Pessoa()).buscaPessoas(req, res);
 });

@@ -20,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.put("/", async (req: Request, res: Response) => {
-  await (new Empresas()).atualizaEmpresa(req, res);
+  await (new Empresas()).editarEmpresa(req, res);
 });
 
 export default router;

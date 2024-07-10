@@ -147,6 +147,9 @@ export default class PessoaController extends RecursosHumanosController {
       if (!cidade)
         throw new Error("A Cidade informada não está cadastrada!");
 
+      if (cidade.estadoId != estado.id)
+        throw new Error("Esta cidade não pertence a este estado!");
+
       // bairro
       // ------------------------------------------------------------------------------------------------------
 
@@ -192,6 +195,107 @@ export default class PessoaController extends RecursosHumanosController {
       if (enderecoPessoa && Object.keys(objetoUpdate).length > 0) {
         mensagem = "Endereço atualizado com sucesso!";
       } else if (enderecoPessoa && Object.keys(objetoUpdate).length <= 0) {
+        mensagem = "Nenhuma informação foi atualizada!";
+      }
+
+      // ------------------------------------------------------------------------------------------------------
+
+      enderecoRetornar = await this.buscaEnderecoPessoa(dados.pessoaId, true) as PessoaEndereco;
+
+      return res.status(200).json({
+        mensagem,
+        enderecoAtualizado,
+        pessoaEndereco: { ...enderecoRetornar.dataValues }
+      });
+
+    } catch (error) {
+      return res.status(500).json({ erro: (error as Error).message });
+    }
+  }
+
+  public async editarEnderecoPessoa(req: Request, res: Response): Promise<Response> {
+    try {
+      const dados: EnderecoPessoaValidator = await validaParametros<EnderecoPessoaValidator, any>(EnderecoPessoaValidator, req.body);
+      let enderecoRetornar:   PessoaEndereco;
+      let objetoUpdate:       any     = { };
+      let enderecoAtualizado: boolean = false;
+      let mensagem:           string  = "";
+
+      // verifica se a pessoa existe
+      // ------------------------------------------------------------------------------------------------------
+      let pessoaExistente: Pessoa = await this.obtemPessoa(undefined, dados.pessoaId);
+
+      if (!pessoaExistente)
+        throw new Error(`A pessoa informada, não existe cadastrada. ID: ${dados.pessoaId}`);
+
+      // verifica se a pessoa possui endereco
+      // ------------------------------------------------------------------------------------------------------
+      const enderecoPessoa: Endereco = await this.buscaEnderecoPessoa(dados.pessoaId) as Endereco;
+
+      // para editar um endereço, o mesmo precisa existir
+      if (!enderecoPessoa)
+        throw new Error("Esta pessoa não possui endereço cadastrado, para editar um endereço, ele precisa existir!");
+
+      // verifica opcoes
+      // ------------------------------------------------------------------------------------------------------
+      const tipoEndereco: string = await new HelperOpcoes().obtemOpcao(EnumGruposOpcoes.TiposEndereco, dados.opcoesTipoId);
+
+      if (!tipoEndereco)
+        throw new Error("O Tipo do endereço informado está cadastrado!");
+
+      // verifica estado
+      // ------------------------------------------------------------------------------------------------------
+      const estado: Estado = await new HelperEstado().obtemEstado(undefined, dados.estadoId);
+
+      if (!estado)
+        throw new Error("O Estado informado não está cadastrado!");
+
+      // verifica cidade
+      // ------------------------------------------------------------------------------------------------------
+      const cidade: Cidade = await new HelperCidade().obtemCidade(undefined, dados.cidadeId);
+
+      if (!cidade)
+        throw new Error("A Cidade informada não está cadastrada!");
+
+      if (cidade.estadoId != estado.id)
+        throw new Error("Esta cidade não pertence a este estado!");
+
+      // verifica bairro
+      // ------------------------------------------------------------------------------------------------------
+      const bairro: Bairro = await new HelperBairro().obtemBairro(dados.bairroId, undefined, cidade.id);
+
+      if (!bairro)
+        throw new Error("O Bairro informado não existe cadastrado ou não pertence a esta cidade!");
+
+      // ------------------------------------------------------------------------------------------------------
+
+      const endereco: Endereco = new Endereco();
+
+      endereco.rua          = dados.rua         ? dados.rua.trim()         : null;
+      endereco.numero       = dados.numero      ? dados.numero.trim()      : null;
+      endereco.observacao   = dados.observacao  ? dados.observacao.trim()  : null;
+      endereco.complemento  = dados.complemento ? dados.complemento.trim() : null;
+      endereco.cep          = limpaFormatacaoCEP(dados.cep) ? limpaFormatacaoCEP(dados.cep) : null;
+      endereco.opcoesTipoId = dados.opcoesTipoId;
+      endereco.bairroId     = dados.bairroId;
+      endereco.cidadeId     = dados.cidadeId;
+      endereco.estadoId     = dados.estadoId;
+
+      // Tenta atualizar somente as propriedades alteradas
+      objetoUpdate = retornaDiferencaObjetos(enderecoPessoa.dataValues, endereco.dataValues)
+
+      if (Object.keys(objetoUpdate).length > 0) {
+        await this.db().transaction(async (transaction: Transaction)=> {
+            enderecoAtualizado = await new HelperEndereco().atualizaEnderecoExistente(enderecoPessoa, objetoUpdate, transaction);
+        });
+      }
+
+      // ------------------------------------------------------------------------------------------------------
+      // define a mensagem a ser retornada ao usuário
+
+      if (enderecoPessoa && Object.keys(objetoUpdate).length > 0) {
+        mensagem = "Endereço atualizado com sucesso!";
+      } else if (Object.keys(objetoUpdate).length <= 0) {
         mensagem = "Nenhuma informação foi atualizada!";
       }
 

@@ -4,7 +4,7 @@ import Cidade from "@models/cidade";
 class HelperCidade extends Controller {
 
   async insereCidade(cidade: Cidade): Promise<Cidade> {
-    return await cidade.save();;
+    return await cidade.save();
   }
 
   async obtemCidade(ibgeId?: number, id?: number): Promise<Cidade> {

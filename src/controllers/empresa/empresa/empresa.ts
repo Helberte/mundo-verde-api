@@ -90,7 +90,7 @@ export default class EmpresasController extends EmpresaController {
     }
   }
 
-  public async atualizaEmpresa(req: Request, res: Response): Promise<Response> {
+  public async editarEmpresa(req: Request, res: Response): Promise<Response> {
     try {
       const empresa: EmpresaValidatorUpdate = await validaParametros<EmpresaValidatorUpdate, any>(EmpresaValidatorUpdate, req.body);
       const values: any = { };
@@ -239,6 +239,9 @@ export default class EmpresasController extends EmpresaController {
 
       if (!cidade)
         throw new Error("A Cidade informada não está cadastrada!");
+
+      if (cidade.estadoId != estado.id)
+        throw new Error("Esta cidade não pertence a este estado!");
 
       // bairro
       // ------------------------------------------------------------------------------------------------------
