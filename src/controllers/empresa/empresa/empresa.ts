@@ -15,6 +15,7 @@ import Bairro from "@models/bairro";
 import HelperBairro from "@helpers/bairro";
 import { Transaction } from "sequelize";
 import EmpresaEndereco from "@models/empresa_endereco";
+import HelperEndereco from "@helpers/endereco";
 
 export default class EmpresasController extends EmpresaController {
 
@@ -251,11 +252,11 @@ export default class EmpresasController extends EmpresaController {
 
       const endereco: Endereco = new Endereco();
 
-      endereco.rua          = dados.rua.trim();
-      endereco.numero       = dados.numero?.trim();
-      endereco.observacao   = dados.observacao?.trim();
-      endereco.complemento  = dados.complemento?.trim();
-      endereco.cep          = limpaFormatacaoCEP(dados.cep);
+      endereco.rua          = dados.rua         ? dados.rua.trim()         : null;
+      endereco.numero       = dados.numero      ? dados.numero.trim()      : null;
+      endereco.observacao   = dados.observacao  ? dados.observacao.trim()  : null;
+      endereco.complemento  = dados.complemento ? dados.complemento.trim() : null;
+      endereco.cep          = limpaFormatacaoCEP(dados.cep) ? limpaFormatacaoCEP(dados.cep) : null;
       endereco.opcoesTipoId = dados.opcoesTipoId;
       endereco.bairroId     = dados.bairroId;
       endereco.cidadeId     = dados.cidadeId;
@@ -267,7 +268,7 @@ export default class EmpresasController extends EmpresaController {
 
         if (Object.keys(objetoUpdate).length > 0) {
           await this.db().transaction(async (transaction: Transaction)=> {
-              enderecoAtualizado = await this.atualizaEnderecoEmpresa(enderecoEmpresa, objetoUpdate, transaction);
+              enderecoAtualizado = await new HelperEndereco().atualizaEnderecoExistente(enderecoEmpresa, objetoUpdate, transaction);
           });
         }
       } else {
