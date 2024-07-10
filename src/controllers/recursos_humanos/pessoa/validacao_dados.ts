@@ -119,6 +119,7 @@ class PessoaValidator {
 }
 
 class PessoaValidatorFind {
+  @Length(1, 14, { message: "Tamanho do ID inválido" })
   @IsNumberString({ no_symbols: true }, { message: "Id inválido" })
   @IsOptional()
   id: number;
@@ -148,11 +149,10 @@ class PessoaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   dataNascimento: string;
 
-  @Max(99999999, { message: "O valor máximo para o ID do sexo foi excedido." })
-  @Min(1, { message: "O valor mínimo para o ID do sexo é 1" })
-  @IsInt({ message: "O ID do sexo precisa ser um número inteiro" })
+  @Length(1, 14, { message: "Tamanho do ID do Sexo inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O ID do Sexo precisa ser somente números" })
   @IsOptional()
-  opcoesSexoId: number;
+  opcoesSexoId: string;
 
   @Length(1, 150, { message: "Tamanho do email inválido" })
   @IsString({ message: "O email precisa ser um texto" })

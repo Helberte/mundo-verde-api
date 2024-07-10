@@ -73,6 +73,8 @@ class RecursosHumanosController extends Controller {
     // --------------------------------------------------------------------------------------------------------------
   }
 
+  // criar função que recebe um objeto, e ele retorna um objeto com os atributos que existirem
+
   //#endregion
 
 }

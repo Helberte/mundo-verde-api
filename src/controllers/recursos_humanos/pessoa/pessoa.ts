@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import RecursosHumanosController from "../pessoa_controller";
-import { PessoaValidator } from "./validacao_dados";
+import { PessoaValidator, PessoaValidatorFind } from "./validacao_dados";
 import { limpaFormatacaoNumeros, validaParametros } from "@helpers/utils";
 import Pessoa from "@models/pessoa";
 import HelperOpcoes, { EnumGruposOpcoes } from "@helpers/opcoes";
@@ -60,6 +60,27 @@ export default class PessoaController extends RecursosHumanosController {
       // --------------------------------------------------------------------------------------------------------------
 
       return res.status(200).json({ mensagem: "Cadastro da pessoa criado com sucesso!" });
+
+    } catch (error) {
+      return res.status(500).json({ erro: (error as Error).message });
+    }
+  }
+
+  public async buscaPessoas(req: Request, res: Response): Promise<Response> {
+    try {
+      const pessoa: PessoaValidatorFind = await validaParametros<PessoaValidatorFind, any>(PessoaValidatorFind, req.body);
+      
+      const pessoaFind: Pessoa = new Pessoa();
+
+      pessoaFind.nome           = pessoa.nome?.trim();
+      pessoaFind.sobrenome      = pessoa.sobrenome?.trim();
+      pessoaFind.cpf            = pessoa.cpf?.trim();
+      pessoaFind.dataNascimento = moment(pessoa.dataNascimento?.trim()).utcOffset(0, true);
+      pessoaFind.opcoesSexoId   = Number(pessoa.opcoesSexoId?.trim());
+      pessoaFind.email          = pessoa.email?.trim();
+      pessoaFind.telefone1      = pessoa.telefone1?.trim();
+      pessoaFind.telefone2      = pessoa.telefone2?.trim();
+      pessoaFind.rg             = pessoa.rg?.trim();
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
