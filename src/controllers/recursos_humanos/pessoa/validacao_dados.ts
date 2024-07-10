@@ -1,6 +1,7 @@
 import { validaCPF } from "@helpers/utils";
 import { Transform, TransformFnParams } from "class-transformer";
 import {
+  IsBoolean,
   IsDateString,
   IsEmail,
   IsInt,
@@ -122,7 +123,8 @@ class PessoaValidatorFind {
   @Length(1, 14, { message: "Tamanho do ID inválido" })
   @IsNumberString({ no_symbols: true }, { message: "Id inválido" })
   @IsOptional()
-  id: number;
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  id: string;
 
   @Length(1, 100, { message: "O tamanho do nome é inválido" })
   @IsString({ message: "O nome precisa ser um texto" })
@@ -142,10 +144,11 @@ class PessoaValidatorFind {
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   cpf: string;
 
-  @MaxLength(14, { message: "O tamanho máximo da data foi excedido!" })
-  @MinLength(1, { message: "O tamanho mínimo da data foi excedido!" })
-  @IsString({ message: "Data de Nascimento Inválida: $value" })
+  @Validate(validadorDataNascimento)
+  @MaxLength(19, { message: "O tamanho máximo da data foi excedido!" })
+  @MinLength(8, { message: "A data de nascimento está com tamanho inválido" })
   @IsOptional()
+  @IsDateString(undefined, { message: "Data de Nascimento Inválida: $value" })
   @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
   dataNascimento: string;
 
@@ -187,8 +190,75 @@ class PessoaValidatorUpdate extends PessoaValidator {
   id: number;
 }
 
+class EnderecoPessoaValidator {
+  @Length(1, 100, { message: "O tamanho do nome da rua é inválido" })
+  @IsString({ message: "O nome da rua precisa ser um texto" })
+  @IsNotEmpty({ message: "O nome da rua é obrigatorio" })
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  rua: string;
+
+  @Length(1, 15, { message: "O tamanho do número é inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O número só pode conter números" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  numero?: string;
+
+  @Length(8, 8, { message: "O tamanho CEP é inválido" })
+  @IsNumberString({ no_symbols: true }, { message: "O CEP só pode conter números" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  cep?: string;
+
+  @Length(5, 300, { message: "O tamanho da observação é inválido" })
+  @IsString({ message: "A Observacao precisa ser um texto" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  observacao?: string;
+
+  @Length(5, 300, { message: "O tamanho do complemento é inválido" })
+  @IsString({ message: "O complemento precisa ser um texto" })
+  @IsOptional()
+  @Transform((params: TransformFnParams) => sanitizeHtml(params.value))
+  complemento?: string;
+
+  @IsBoolean({ message: "A liberação precisa ser booleana, true ou false" })
+  @IsOptional()
+  liberacao: boolean;
+
+  @Max(99999999, { message: "O valor máximo para o ID da pessoa foi excedido." })
+  @Min(1, { message: "O valor mínimo para o ID da pessoa é 1" })
+  @IsInt({ message: "O ID da pessoa precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id da pessoa é obrigatorio" })
+  pessoaId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID do tipo do endereço foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do tipo do endereço é 1" })
+  @IsInt({ message: "O ID do tipo do endereço precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do tipo do endereço é obrigatorio" })
+  opcoesTipoId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID do bairro foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do bairro é 1" })
+  @IsInt({ message: "O ID do bairro precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do bairro é obrigatorio" })
+  bairroId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID da cidade foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID da cidade é 1" })
+  @IsInt({ message: "O ID da cidade precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id da cidade é obrigatorio" })
+  cidadeId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID do estado foi excedido." })
+  @Min(1, {message: "O valor mínimo para o ID do estado é 1" })
+  @IsInt({ message: "O ID do estado precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id do estado é obrigatorio" })
+  estadoId: number;
+}
+
 export {
   PessoaValidator,
   PessoaValidatorFind,
-  PessoaValidatorUpdate
+  PessoaValidatorUpdate,
+  EnderecoPessoaValidator
 }
