@@ -1,5 +1,4 @@
 import { Router } from "express";
-import autenticacao from "@controle_acesso/routers";
 import estado from "@controllers/endereco/estado/routers";
 import cidade from "@controllers/endereco/cidade/routers";
 import bairro from "@controllers/endereco/bairro/routers";
@@ -8,8 +7,6 @@ import empresas from "@controllers/empresa/empresa/routers";
 import pessoa from "@controllers/recursos_humanos/pessoa/routers";
 
 const router = Router();
-
-router.use("/login", autenticacao)
 
 //#region Endereço
 
