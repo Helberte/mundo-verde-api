@@ -41,6 +41,12 @@ class UsuarioValidator {
   @IsInt({ message: "O ID da pessoa precisa ser um número inteiro" })
   @IsNotEmpty({ message: "O Id da pessoa é obrigatorio" })
   pessoaId: number;
+
+  @Max(99999999, { message: "O valor máximo para o ID da empresa foi excedido." })
+  @Min(1, { message: "O valor mínimo para o ID da empresa é 1" })
+  @IsInt({ message: "O ID da empresa precisa ser um número inteiro" })
+  @IsNotEmpty({ message: "O Id da empresa é obrigatorio" })
+  empresaId: number;
 }
 
 class UsuarioValidatorFind {

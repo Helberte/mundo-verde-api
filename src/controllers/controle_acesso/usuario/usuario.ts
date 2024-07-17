@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { EnderecoPessoaValidator, PessoaValidator, PessoaValidatorFind } from "./validacao_dados";
+import { EnderecoPessoaValidator, PessoaValidatorFind, UsuarioValidator } from "./validacao_dados";
 import { limpaFormatacaoCEP, limpaFormatacaoNumeros, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
 import Pessoa from "@models/pessoa";
 import HelperOpcoes, { EnumGruposOpcoes } from "@helpers/opcoes";
@@ -21,8 +21,35 @@ export default class UsuarioController extends ControleAcessoController {
 
   public async criarUsuario(req: Request, res: Response): Promise<Response> {
     try {
-      const pessoa: PessoaValidator = await validaParametros<PessoaValidator, any>(PessoaValidator, req.body);
-      let pessoaIdInserida: number  = 0;
+      const usuario: UsuarioValidator = await validaParametros<UsuarioValidator, any>(UsuarioValidator, req.body);
+
+      // verificar se pessoa existe
+      const pessoa: Pessoa = await this.obtemPessoa(undefined, usuario.pessoaId);
+
+      if (!pessoa)
+        throw new Error("A pessoa informada não existe cadastrada.");
+
+      // verificar se a pessoa tem acesso a empresa na qual se está isnerindo o usuário para ela
+
+      // verificar se pessoa já possui usuário
+      // se possuir usuário, verificar se ele está ativo ou inativo
+
+      // verificar se tem outro usuário com o mesmo login
+
+      // verificar se a empresa passada por parametro existe
+
+      // verificar se tem outro usuário nesta empresa com mesmo nome
+
+      // passar a senha do usuário por um hash com salt
+
+      // inserir usuário
+
+      // inserir usuário na empresa passada por parametro
+
+
+
+
+
 
       // Depois da parte da validacao do usuário, inserir a pessoa na empresa na qual o usuário que chamou esta rota
       // está logado
