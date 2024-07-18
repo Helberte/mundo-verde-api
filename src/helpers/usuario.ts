@@ -1,6 +1,5 @@
 import Controller from "@controllers/controller";
 import Empresa from "@models/empresa";
-import EmpresaUsuario from "@models/empresa_usuario";
 import Pessoa from "@models/pessoa";
 import Usuario from "@models/usuario";
 import { Transaction } from "sequelize";
@@ -62,28 +61,20 @@ class HelperUsuario extends Controller {
     if (nome)
       where.nome = nome;
 
-    const usuarios: Usuario[] = (await Empresa.findOne({
+    const usuario: Usuario = await Usuario.findOne({
       include: {
-        model: EmpresaUsuario,
+        attributes: ["id", "nome_fantasia"],
+        model: Empresa,
         required: true,
-        include: [
-          {
-            model: Usuario,
-            required: true,
-            where
-          }
-        ]
+        where: {
+          id: empresaId
+        }
       },
-      where: {
-        id: empresaId
-      },
+      where,
       transaction
-    }))?.usuarios;
+    })
 
-    if (usuarios.length > 0)
-      return usuarios[0];
-    else
-      return undefined;
+    return usuario;
   }
 }
 
