@@ -1,21 +1,14 @@
 import { Request, Response } from "express";
-import { EnderecoPessoaValidator, PessoaValidatorFind, UsuarioValidator } from "./validacao_dados";
-import { limpaFormatacaoCEP, limpaFormatacaoNumeros, retornaDiferencaObjetos, validaParametros } from "@helpers/utils";
+import { UsuarioValidator } from "./validacao_dados";
+import { validaParametros } from "@helpers/utils";
 import Pessoa from "@models/pessoa";
-import HelperOpcoes, { EnumGruposOpcoes } from "@helpers/opcoes";
-import moment from "moment";
-import { Transaction } from "sequelize";
 import HelperPessoa from "@helpers/pessoa";
-import PessoaEndereco from "@models/pessoa_endereco";
-import HelperEstado from "@helpers/estado";
-import Estado from "@models/estado";
-import Cidade from "@models/cidade";
-import HelperCidade from "@helpers/cidade";
-import Bairro from "@models/bairro";
-import HelperBairro from "@helpers/bairro";
-import Endereco from "@models/endereco";
-import HelperEndereco from "@helpers/endereco";
 import ControleAcessoController from "@controle_acesso/controle_acesso_controller";
+import Usuario from "@models/usuario";
+import HelperUsuario from "@helpers/usuario";
+import Empresa from "@models/empresa";
+import HelperEmpresa from "@helpers/empresa";
+import bcrypt from "bcrypt";
 
 export default class UsuarioController extends ControleAcessoController {
 
@@ -23,34 +16,71 @@ export default class UsuarioController extends ControleAcessoController {
     try {
       const usuario: UsuarioValidator = await validaParametros<UsuarioValidator, any>(UsuarioValidator, req.body);
 
+      // ------------------------------------------------------------------------------------------------------------
       // verificar se pessoa existe
       const pessoa: Pessoa = await this.obtemPessoa(undefined, usuario.pessoaId);
 
       if (!pessoa)
         throw new Error("A pessoa informada não existe cadastrada.");
 
-      // verificar se a pessoa tem acesso a empresa na qual se está isnerindo o usuário para ela
-
-      // verificar se pessoa já possui usuário
-      // se possuir usuário, verificar se ele está ativo ou inativo
-
-      // verificar se tem outro usuário com o mesmo login
-
+      // ------------------------------------------------------------------------------------------------------------
       // verificar se a empresa passada por parametro existe
+      const empresaUsuario: Empresa = await new HelperEmpresa().obtemEmpresa(undefined, usuario.empresaId);
 
+      if (!empresaUsuario)
+        throw new Error("A empresa informada não existe cadastrada.");
+
+      // ------------------------------------------------------------------------------------------------------------
+      // verificar se a pessoa tem acesso a empresa na qual se está isnerindo o usuário para ela
+      const empresaPessoa: boolean = await new HelperPessoa().verificaPessoaEmpresa(usuario.empresaId, usuario.pessoaId, undefined);
+
+      if (!empresaPessoa)
+        throw new Error("A pessoa informada pra este usuário, não tem acesso a esta empresa.");
+
+      // ------------------------------------------------------------------------------------------------------------
+      // verificar se pessoa já possui usuário
+      const usuarioPessoa: Usuario = await new HelperUsuario().obtemUsuarioPessoa(usuario.pessoaId);
+
+      // se possuir usuário, verificar se ele está ativo ou inativo
+      if (usuarioPessoa && usuarioPessoa.ativo.toUpperCase() == "S")
+        throw new Error("Já existe um usuário cadastrado para esta pessoa!");
+      else
+      if (usuarioPessoa && usuarioPessoa.ativo.toUpperCase() == "N")
+        throw new Error("Já existe um usuário Inativo cadastrado para esta pessoa!");
+
+      // ------------------------------------------------------------------------------------------------------------
+      // verificar se tem outro usuário com o mesmo login
+      const usuarioLogin: Usuario = await new HelperUsuario().obtemUsuarioLoginNome(usuario.login);
+
+      // se possuir usuário, verificar se ele está ativo ou inativo
+      if (usuarioLogin && usuarioLogin.ativo.toUpperCase() == "S")
+        throw new Error("Este login já está em uso.");
+      else
+      if (usuarioLogin && usuarioLogin.ativo.toUpperCase() == "N")
+        throw new Error("Este login já está em uso por um usuário Inativo.");
+
+      // ------------------------------------------------------------------------------------------------------------
       // verificar se tem outro usuário nesta empresa com mesmo nome
+      const usuarioNome: Usuario = await new HelperUsuario().obtemUsuarioEmpresaNome(usuario.empresaId, undefined, usuario.nome);
 
+      if (usuarioNome)
+        throw new Error("Já Existe um usuário nesta empresa usando este mesmo nome.");
+
+      // ------------------------------------------------------------------------------------------------------------
       // passar a senha do usuário por um hash com salt
+
+      if (Number(process.env.BCRYPT_SALT_ROUND) < 1)
+        throw new Error("Salt não definido nas variaveis de ambiente.");
+
+      const senhaHash: string = await bcrypt.hash(usuario.senha, Number(process.env.BCRYPT_SALT_ROUND));
+
+      console.log(senhaHash);
 
       // inserir usuário
 
       // inserir usuário na empresa passada por parametro
 
-
-
-
-
-
+      /*
       // Depois da parte da validacao do usuário, inserir a pessoa na empresa na qual o usuário que chamou esta rota
       // está logado
 
@@ -92,16 +122,16 @@ export default class UsuarioController extends ControleAcessoController {
 
         await this.inserePessoaEmpresa(2, pessoaIdInserida, transaction);
       });
-
+*/
       // --------------------------------------------------------------------------------------------------------------
 
-      return res.status(200).json({ mensagem: "Cadastro da pessoa criado com sucesso!" });
+      return res.status(200).json({ mensagem: "Cadastro do usuário criado com sucesso!" });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
   }
-
+/*
   public async buscaPessoas(req: Request, res: Response): Promise<Response> {
     try {
       const pessoa: PessoaValidatorFind = await validaParametros<PessoaValidatorFind, any>(PessoaValidatorFind, req.query);
@@ -339,5 +369,5 @@ export default class UsuarioController extends ControleAcessoController {
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });
     }
-  }
+  }*/
 }
