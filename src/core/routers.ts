@@ -6,6 +6,7 @@ import grupoEmpresa from "@controllers/empresa/grupo_empresa/routers";
 import empresas from "@controllers/empresa/empresa/routers";
 import pessoa from "@controllers/recursos_humanos/pessoa/routers";
 import usuario from "@controle_acesso/usuario/routers";
+import menu from "@controle_acesso/menu/routers";
 
 const router = Router();
 
@@ -30,9 +31,19 @@ router.use("/pessoa", pessoa)
 
 //#endregion
 
+//#region Controle Acesso
+
 //#region Usuário
 
 router.use("/usuarios", usuario);
+
+//#endregion
+
+//#region Menu
+
+router.use("/menus", menu);
+
+//#endregion
 
 //#endregion
 

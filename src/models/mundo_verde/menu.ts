@@ -16,7 +16,7 @@ export default class Menu extends SequelizeModel<Menu> {
   @Column
   descricao: string
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column
   pai: number
 

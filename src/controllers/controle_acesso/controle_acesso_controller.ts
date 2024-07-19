@@ -8,6 +8,7 @@ import EmpresaPessoa from "@models/empresa_pessoa";
 import Endereco from "@models/endereco";
 import Estado from "@models/estado";
 import { GruposDeOpcoes } from "@models/grupo_opcoes";
+import Menu from "@models/menu";
 import Opcoes from "@models/opcao";
 import Pessoa from "@models/pessoa";
 import PessoaEndereco from "@models/pessoa_endereco";
@@ -197,6 +198,43 @@ class ControleAcessoController extends Controller {
     await pessoaEndereco.save({ transaction });
 
     return enderecoInserido;
+  }
+
+  //#endregion
+
+  //#region Menu
+
+  async obtemMenuNome(nome?: string, id?: number, transaction?: Transaction): Promise<Menu> {
+    const where: any =  { };
+
+    if (!nome && !id)
+      throw new Error("Informe o Nome ou o Id do menu");
+
+    if (nome)
+      where.nome = nome;
+
+    if (id)
+      where.id = id;
+
+    return await Menu.findOne({
+      where,
+      transaction
+    });
+  }
+
+  async obtemMenusFilho(pai: number, transaction?: Transaction): Promise<Menu[]> {
+
+    if (!pai)
+      throw new Error("O id do menu Pai precisa ser informado.");
+
+    const menusFilho: Menu[] = await Menu.findAll({
+      where: {
+        pai
+      },
+      transaction
+    })
+
+    return menusFilho;
   }
 
   //#endregion
