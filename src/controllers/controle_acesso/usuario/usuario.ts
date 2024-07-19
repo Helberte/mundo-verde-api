@@ -9,12 +9,15 @@ import HelperUsuario from "@helpers/usuario";
 import Empresa from "@models/empresa";
 import HelperEmpresa from "@helpers/empresa";
 import bcrypt from "bcrypt";
+import { Transaction } from "sequelize";
 
 export default class UsuarioController extends ControleAcessoController {
 
   public async criarUsuario(req: Request, res: Response): Promise<Response> {
     try {
-      const usuario: UsuarioValidator = await validaParametros<UsuarioValidator, any>(UsuarioValidator, req.body);
+      const usuario: UsuarioValidator    = await validaParametros<UsuarioValidator, any>(UsuarioValidator, req.body);
+      const helperUsuario: HelperUsuario = new HelperUsuario();
+      let   usuarioInserido: Usuario;
 
       // ------------------------------------------------------------------------------------------------------------
       // verificar se pessoa existe
@@ -39,7 +42,7 @@ export default class UsuarioController extends ControleAcessoController {
 
       // ------------------------------------------------------------------------------------------------------------
       // verificar se pessoa já possui usuário
-      const usuarioPessoa: Usuario = await new HelperUsuario().obtemUsuarioPessoa(usuario.pessoaId);
+      const usuarioPessoa: Usuario = await helperUsuario.obtemUsuarioPessoa(usuario.pessoaId);
 
       // se possuir usuário, verificar se ele está ativo ou inativo
       if (usuarioPessoa && usuarioPessoa.ativo.toUpperCase() == "S")
@@ -50,7 +53,7 @@ export default class UsuarioController extends ControleAcessoController {
 
       // ------------------------------------------------------------------------------------------------------------
       // verificar se tem outro usuário com o mesmo login
-      const usuarioLogin: Usuario = await new HelperUsuario().obtemUsuarioLoginNome(usuario.login);
+      const usuarioLogin: Usuario = await helperUsuario.obtemUsuarioLoginNome(usuario.login);
 
       // se possuir usuário, verificar se ele está ativo ou inativo
       if (usuarioLogin && usuarioLogin.ativo.toUpperCase() == "S")
@@ -61,71 +64,38 @@ export default class UsuarioController extends ControleAcessoController {
 
       // ------------------------------------------------------------------------------------------------------------
       // verificar se tem outro usuário nesta empresa com mesmo nome
-      const usuarioNome: Usuario = await new HelperUsuario().obtemUsuarioEmpresaNome(usuario.empresaId, undefined, usuario.nome);
+      const usuarioNome: Usuario = await helperUsuario.obtemUsuarioEmpresaNome(usuario.empresaId, undefined, usuario.nome);
 
       if (usuarioNome)
         throw new Error("Já Existe um usuário nesta empresa usando este mesmo nome.");
 
       // ------------------------------------------------------------------------------------------------------------
-      // passar a senha do usuário por um hash com salt
-
+      // passa a senha do usuário por um hash com salt
       if (Number(process.env.BCRYPT_SALT_ROUND) < 1)
         throw new Error("Salt não definido nas variaveis de ambiente.");
 
       const senhaHash: string = await bcrypt.hash(usuario.senha, Number(process.env.BCRYPT_SALT_ROUND));
 
-      console.log(senhaHash);
-
+      // ------------------------------------------------------------------------------------------------------------
       // inserir usuário
+      const novoUsuario: Usuario = new Usuario();
+      novoUsuario.login    = usuario.login.trim();
+      novoUsuario.senha    = senhaHash;
+      novoUsuario.nome     = usuario.nome.trim();
+      novoUsuario.ativo    = usuario.ativo;
+      novoUsuario.pessoaId = usuario.pessoaId;
 
-      // inserir usuário na empresa passada por parametro
+      await this.db().transaction(async (transaction: Transaction) => {
 
-      /*
-      // Depois da parte da validacao do usuário, inserir a pessoa na empresa na qual o usuário que chamou esta rota
-      // está logado
+        usuarioInserido = await helperUsuario.insereUsuario(novoUsuario, transaction);
 
-      // verificar se existe pessoa com mesmo cpf
-      // --------------------------------------------------------------------------------------------------------------
-      const pessoaExistente: Pessoa = await this.obtemPessoa(pessoa.cpf);
-
-      if (pessoaExistente)
-        throw new Error("Este CPF já está em uso.");
-
-      // verificar se a opção do sexo da pessoa existe cadastrada
-      // --------------------------------------------------------------------------------------------------------------
-      const sexo: string = await new HelperOpcoes().obtemOpcao(EnumGruposOpcoes.SexoPessoas, pessoa.opcoesSexoId);
-
-      if (!sexo)
-        throw new Error("O sexo informado não existe cadastrado!");
-
-      // fazer a insersão da pessoa
-      // --------------------------------------------------------------------------------------------------------------
-      const novaPessoa: Pessoa = new Pessoa();
-
-      novaPessoa.nome           = pessoa.nome.toUpperCase().trim();
-      novaPessoa.sobrenome      = pessoa.sobrenome.toUpperCase().trim();
-      novaPessoa.cpf            = limpaFormatacaoNumeros(pessoa.cpf);
-      novaPessoa.dataNascimento = moment(pessoa.dataNascimento).utcOffset(0, true); // remove o utc -04:00
-      novaPessoa.opcoesSexoId   = pessoa.opcoesSexoId;
-      novaPessoa.email          = pessoa.email?.trim() ? pessoa.email.trim() : null;
-      novaPessoa.telefone1      = limpaFormatacaoNumeros(pessoa.telefone1) ? limpaFormatacaoNumeros(pessoa.telefone1) : null;
-      novaPessoa.telefone2      = limpaFormatacaoNumeros(pessoa.telefone2) ? limpaFormatacaoNumeros(pessoa.telefone2) : null;
-      novaPessoa.rg             = limpaFormatacaoNumeros(pessoa.rg)        ? limpaFormatacaoNumeros(pessoa.rg)        : null;
-
-      // fazer a insersão da pessoa cadastrada na empresa onde ela irá pertencer
-
-      await this.db().transaction( async (transaction: Transaction) => {
-        pessoaIdInserida = (await new HelperPessoa().inserePessoa(novaPessoa, transaction)).id;
-
-        if (pessoaIdInserida === 0)
-          throw new Error("Erro ao inserir pessoa.");
-
-        await this.inserePessoaEmpresa(2, pessoaIdInserida, transaction);
+        await helperUsuario.insereUsuarioEmpresa(usuarioInserido.id, usuario.empresaId, transaction);
       });
-*/
-      // --------------------------------------------------------------------------------------------------------------
 
-      return res.status(200).json({ mensagem: "Cadastro do usuário criado com sucesso!" });
+      return res.status(200).json({
+        mensagem: "Cadastro do usuário criado com sucesso!",
+        usuario: usuarioInserido
+      });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });

@@ -1,10 +1,23 @@
 import Controller from "@controllers/controller";
 import Empresa from "@models/empresa";
+import EmpresaUsuario from "@models/empresa_usuario";
 import Pessoa from "@models/pessoa";
 import Usuario from "@models/usuario";
 import { Transaction } from "sequelize";
 
 class HelperUsuario extends Controller {
+
+  async insereUsuario(usuario: Usuario, transaction?: Transaction): Promise<Usuario> {
+    return await usuario.save({ transaction });
+  }
+
+  async insereUsuarioEmpresa(usuarioId: number, empresaId: number, transaction?: Transaction): Promise<void> {
+
+    if (!usuarioId || !empresaId)
+      throw new Error("Faltam dados para inserir o usuário para esta empresa.")
+
+    await EmpresaUsuario.create({ usuarioId, empresaId }, { transaction });
+  }
 
   async obtemUsuarioPessoa(pessoaId: number, transaction?: Transaction): Promise<Usuario> {
 
