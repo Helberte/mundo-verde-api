@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { MenuValidator } from "./validacao_dados";
+import { MenuValidator, MenuValidatorFind } from "./validacao_dados";
 import { validaParametros } from "@helpers/utils";
 import ControleAcessoController from "@controle_acesso/controle_acesso_controller";
 import Menu from "@models/menu";
@@ -56,6 +56,27 @@ export default class MenuController extends ControleAcessoController {
         mensagem: "Novo menu criado com sucesso!",
         menu: menuCadastrado
       });
+
+    } catch (error) {
+      return res.status(500).json({ erro: (error as Error).message });
+    }
+  }
+
+  public async consultaMenus(req: Request, res: Response): Promise<Response> {
+    try {
+      const menu: MenuValidatorFind = await validaParametros<MenuValidatorFind, any>(MenuValidatorFind, req.query);
+
+      const menuFind: Menu = new Menu({
+        id:         menu.id ? Number(menu.id) : undefined,
+        nome:       menu.nome,
+        descricao:  menu.descricao,
+        pai:        menu.pai ? Number(menu.pai) : undefined,
+        ordem:      menu.ordem ? Number(menu.ordem) : undefined
+      });
+
+      const menus: Menu[] = await this.listaMenus(menuFind);
+
+      return res.status(200).json({ menus });
 
     } catch (error) {
       return res.status(500).json({ erro: (error as Error).message });

@@ -16,6 +16,7 @@ import moment from "moment";
 import { Op, Transaction } from "sequelize";
 
 class ControleAcessoController extends Controller {
+
   //#region Pessoa
 
   async obtemPessoa(cpf?: string, id?: number, transaction?: Transaction): Promise<Pessoa> {
@@ -235,6 +236,27 @@ class ControleAcessoController extends Controller {
     })
 
     return menusFilho;
+  }
+
+  async listaMenus(menu?: Menu, limit: number = 50): Promise<Menu[]> {
+    const find: any = limpaObjeto(menu?.dataValues);
+    const like: any = returnObjetoLike(find, [ "nome", "descricao" ]);
+
+    delete find.nome;
+    delete find.descricao;
+
+    return await Menu.findAll({
+      where: {
+        ...find,
+        ...like
+      },
+      order: [
+        ["nome",  "ASC"],
+        ["pai",   "ASC"],
+        ["ordem", "ASC"]
+      ],
+      limit
+    });
   }
 
   //#endregion
