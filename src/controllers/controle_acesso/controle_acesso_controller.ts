@@ -10,6 +10,7 @@ import Estado from "@models/estado";
 import { GruposDeOpcoes } from "@models/grupo_opcoes";
 import Menu from "@models/menu";
 import Opcoes from "@models/opcao";
+import Perfil from "@models/perfil";
 import Pessoa from "@models/pessoa";
 import PessoaEndereco from "@models/pessoa_endereco";
 import moment from "moment";
@@ -257,6 +258,25 @@ class ControleAcessoController extends Controller {
       ],
       limit
     });
+  }
+
+  //#endregion
+
+  //#region
+
+  public async obtemPerfil(empresaId: number, id?: number, nome?: string, transaction?: Transaction): Promise<Perfil> {
+    const where: any = { empresaId };
+
+    if (!id && !nome)
+      throw new Error("Informe o Id do perfil ou o nome do mesmo.");
+
+    if (id)
+      where.id = id;
+
+    if (nome)
+      where.nome = nome;
+
+    return await Perfil.findOne({ where, transaction });
   }
 
   //#endregion

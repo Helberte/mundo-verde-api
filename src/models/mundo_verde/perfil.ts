@@ -6,7 +6,7 @@ import PerfilMenu from "./perfil_menu";
 import Usuario from "./usuario";
 import PerfilUsuario from "./perfil_usuario";
 
-@Table({ tableName: "perfil", updatedAt: false })
+@Table({ tableName: "perfil" })
 export default class Perfil extends SequelizeModel<Perfil> {
 
   @AllowNull(false)
