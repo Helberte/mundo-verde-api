@@ -1,6 +1,6 @@
 import Controller from "@controllers/controller";
 import GrupoEmpresa from "@models/grupo_empresa";
-// import { deleteCamposDefault } from "./utils";
+import { deleteCamposDefault } from "./utils";
 
 class HelperGrupoEmpresa extends Controller {
 
@@ -10,26 +10,16 @@ class HelperGrupoEmpresa extends Controller {
 
   async excluiGrupoEmpresa(grupoEmpresa: GrupoEmpresa): Promise<void> {
 
-    // const linhasAfetadas: number[] = await GrupoEmpresa.update({
-    //   ...deleteCamposDefault()
-    // }, {
-    //   where: {
-    //     id: grupoEmpresa.id,
-    //     codigo: grupoEmpresa.codigo
-    //   }
-    // });
-
-    const linhasAfetadas: number = await GrupoEmpresa.destroy({
+    const linhasAfetadas: number[] = await GrupoEmpresa.update({
+      ...deleteCamposDefault()
+    }, {
       where: {
         id: grupoEmpresa.id,
         codigo: grupoEmpresa.codigo
       }
     });
 
-    // if (linhasAfetadas[0] < 1)
-    //   throw new Error("Nenhum grupo de empresas foi excluído.")
-
-    if (linhasAfetadas < 1)
+    if (linhasAfetadas[0] < 1)
       throw new Error("Nenhum grupo de empresas foi excluído.")
   }
 }

@@ -1,4 +1,3 @@
-import moment from "moment";
 import { Dialect } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
 
@@ -31,26 +30,7 @@ class Database {
           },
           updatedAt: false,
           timestamps: false,
-          paranoid: true
-        },
-        hooks: {
-          beforeBulkDestroy(options: any) {
-            options.individualHooks = true
-          },
-          beforeBulkUpdate(options: any) {
-            options.individualHooks = true
-          },
-          beforeDestroy(instances, { transaction }) {
-
-            instances.update({
-              deletedAt: moment()
-            }, { transaction })
-          },
-          beforeUpdate(instances, options) {
-
-            instances.dataValues.updatedAt = moment();
-            options.fields.push("updatedAt");
-          }
+          paranoid: false
         }
       }
     );
